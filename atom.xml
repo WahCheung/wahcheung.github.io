@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://cheung.site/"/>
-  <updated>2019-05-13T11:59:26.938Z</updated>
+  <updated>2019-05-13T11:59:26.642Z</updated>
   <id>https://cheung.site/</id>
   
   <author>
@@ -15,41 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://cheung.site/2019/05/13/hello-world/"/>
-    <id>https://cheung.site/2019/05/13/hello-world/</id>
-    <published>2019-05-13T11:59:26.938Z</published>
-    <updated>2019-05-13T11:59:26.938Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><center><img src="/images/regularization/plot-of-training-data-set.png" alt="训练样本与需要拟合的曲线"></center><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
-      
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>cpp-standard-library</title>
-    <link href="https://cheung.site/2019/01/16/cpp-standard-library/"/>
-    <id>https://cheung.site/2019/01/16/cpp-standard-library/</id>
-    <published>2019-01-16T03:45:27.000Z</published>
-    <updated>2019-05-13T11:59:26.914Z</updated>
-    
-    <summary type="html">
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>利用树莓派搭建自动驾驶小车</title>
@@ -108,9 +73,9 @@
     <link href="https://cheung.site/2018/11/27/raspberry-pi-pwm/"/>
     <id>https://cheung.site/2018/11/27/raspberry-pi-pwm/</id>
     <published>2018-11-27T08:11:26.000Z</published>
-    <updated>2019-05-13T11:59:27.446Z</updated>
+    <updated>2019-05-14T04:48:47.238Z</updated>
     
-    <content type="html"><![CDATA[<blockquote><p>在给树莓派小车做加速和减速功能时遇到了脉冲宽度调制的问题，到底什么是脉冲宽度调制，跟智能小车直流电机的转速有什么关系？这几个问题没搞明白的话，感觉小车的控制程序很难继续往下写，于是搜集整理了一下资料。大概这也是不少非电子工程专业的同学在折腾树莓派GPIO时会遇到的问题。</p></blockquote><a id="more"></a><p>我先（以目前浅显的理解）概括一下脉冲宽度调制（以下简称PWM）的作用：树莓派的GPIO口输出的是电子信号，二值状态的电子信号只有高电平(如3.3v)和低电平(0v)的区分，而我的直流伺服电机（小车轮子的小马达）在额定电压通电后的转速是100rpm（100转/分钟），那么我应该怎么让小车以50rpm的速度跑起来呢？假想你有一辆只能以100km/h速度行驶的小车，却要通过一条限速50km/h的街道，你怎么办？<br>方法挺好理解，你只需要驾车走走停停就行了，例如开车一分钟然后停车一分钟，再开车一分钟然后停车一分钟，循环此操作直到通过街道。这样整体下来你的车速（差不多）就是50km/h了。但一分钟才换挡一次，在你开车的一分钟期间看到你开车路过的行人（或者是测速仪）明显能感觉出来你超速了。于是，你把换挡的间隔缩小到了1秒钟，也就是说，开车1秒停车1秒（周期为2秒），这样子，你就骗过了测速仪，成功地以50km/h的速度通过了街道。如果你手速够快，每秒钟可以完成“开车1秒停车1秒”这样的操作10次（即周期为0.1s，频率为10Hz），那么这天衣无缝的开车技术足以瞒天过海，骗过街边的路人甲乙丙丁。<br>脉冲宽度调制的原理跟你上面开车的方法差不多，通过高电平与低电平的比例来模拟需要的电压。其中最重要的概念是占空比（Duty Cycle），即高电平时间占总时间的百分比（0 &lt;= dc &lt;= 1）。假设电信号恒定的高电平为10v，当占空比为0.25（即25%）时，模拟的就是2.5v的电压，占空比为0.5的话就是模拟5v的电压。<br>通过上面的知识，通过PWM控制树莓派小车的速度的方法就出来了，假设在额定的输入电压情况下，转速为100rpm，那么只需要把PWM占空比设置为50%，就可以实现50rpm的转速。输入电压不变的情况下，电机转速与占空比成正比。</p><p>参考文献：<br><a href="https://www.mbtechworks.com/projects/raspberry-pi-pwm.html" target="_blank" rel="noopener">Raspberry Pi Pulse Width Modulation (PWM)</a></p>]]></content>
+    <content type="html"><![CDATA[<blockquote><p>在给树莓派小车做加速和减速功能时遇到了脉冲宽度调制的问题，到底什么是脉冲宽度调制，跟智能小车直流电机的转速有什么关系？这几个问题没搞明白的话，感觉小车的控制程序很难继续往下写，于是搜集整理了一下资料。大概这也是不少非电子工程专业的同学在折腾树莓派GPIO时会遇到的问题。</p></blockquote><a id="more"></a><p>我先（以目前浅显的理解）概括一下脉冲宽度调制（以下简称PWM）的作用：树莓派的GPIO口输出的是电子信号，二值状态的电子信号只有高电平(如3.3v)和低电平(0v)的区分，而我的直流伺服电机（小车轮子的小马达）在额定电压通电后的转速是100rpm（100转/分钟），那么我应该怎么让小车以50rpm的速度跑起来呢？假想你有一辆只能以100km/h速度行驶的小车，却要通过一条限速50km/h的街道，你怎么办？<br>方法挺好理解，你只需要驾车走走停停就行了，例如开车一分钟然后停车一分钟，再开车一分钟然后停车一分钟，循环此操作直到通过街道。这样整体下来你的车速（差不多）就是50km/h了。但一分钟才换挡一次，在你开车的一分钟期间看到你开车路过的行人（或者是测速仪）明显能感觉出来你超速了。于是，你把换挡的间隔缩小到了1秒钟，也就是说，开车1秒停车1秒（周期为2秒），这样子，你就骗过了测速仪，成功地以50km/h的速度通过了街道。如果你手速够快，每秒钟可以完成“开车1秒停车1秒”这样的操作10次（即周期为0.1s，频率为10Hz），那么这天衣无缝的开车技术足以瞒天过海，骗过街边的路人甲乙丙丁。<br>脉冲宽度调制的原理跟你上面开车的方法差不多，通过高电平与低电平的比例来模拟需要的电压。其中最重要的概念是占空比（Duty Cycle），即高电平时间占总时间的百分比（0 &lt;= dc &lt;= 1）。假设电信号恒定的高电平为10v，当占空比为0.25（即25%）时，模拟的就是2.5v的电压，占空比为0.5的话就是模拟5v的电压。<br>通过上面的知识，通过PWM控制树莓派小车的速度的方法就出来了，假设在额定的输入电压情况下，转速为100rpm，那么只需要把PWM占空比设置为50%，就可以实现50rpm的转速。输入电压不变的情况下，电机转速与占空比成正比。</p><p>参考文献：<br>[1]: <a href="https://www.mbtechworks.com/projects/raspberry-pi-pwm.html" target="_blank" rel="noopener">Raspberry Pi Pulse Width Modulation (PWM)</a></p>]]></content>
     
     <summary type="html">
     
@@ -525,6 +490,54 @@
       <category term="维基百科" scheme="https://cheung.site/tags/%E7%BB%B4%E5%9F%BA%E7%99%BE%E7%A7%91/"/>
     
       <category term="Gensim" scheme="https://cheung.site/tags/Gensim/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>搭建Windows C++开发环境</title>
+    <link href="https://cheung.site/2018/01/05/setup-cpp-development-environment-on-windows/"/>
+    <id>https://cheung.site/2018/01/05/setup-cpp-development-environment-on-windows/</id>
+    <published>2018-01-05T14:52:48.000Z</published>
+    <updated>2019-05-13T11:59:26.122Z</updated>
+    
+    <content type="html"><![CDATA[<p>Windows下可用的C++ IDE有不少，毕业前一直用的都是微软的Visual Studio，从VS2010到VS2017，调试特别简单，功能也非常丰富。缺点是不支持多平台。其安装包也很大，高达几个GB，业余时间用来写点小代码感觉就是杀鸡用牛刀…换了不少的IDE，都觉得不太满意，Code::Blocks有集成了mingw的版本，安装和使用都特别简单，但感觉界面风格有点老气…换来换去，最终选择了Eclipse CDT + MinGW的组合。</p><a id="more"></a><h3 id="关于MinGW"><a href="#关于MinGW" class="headerlink" title="关于MinGW"></a>关于MinGW</h3><p>百度搜索<code>mingw</code>大概会指向<code>http://mingw.org/</code>，但这个网站的mingw已经很久没更新了，被坑了很多次，发现下载的版本竟然是10年前的。后来在<a href="https://tieba.baidu.com/p/5487544851" target="_blank" rel="noopener">贴吧</a>发现了mingw现在的官网，地址是 <a href="http://www.mingw-w64.org" target="_blank" rel="noopener">http://www.mingw-w64.org</a><br>首页介绍mingw-w64如下：</p><blockquote><p>Mingw-w64 is an advancement of the original mingw.org project, created to support the GCC compiler on Windows systems. It has forked it in 2007 in order to provide support for 64 bits and new APIs. It has since then gained widespread use and distribution.</p></blockquote><p>看来旧版mingw网站已经停更10年了。<a href="https://tieba.baidu.com/p/5487544851" target="_blank" rel="noopener">mingw吧</a>提供了新版mingw网站的mingw版本介绍和下载方法。<br>下载方式：前往 <a href="https://sourceforge.net/projects/mingw-w64/files/?source=navbar" target="_blank" rel="noopener">https://sourceforge.net/projects/mingw-w64/files/?source=navbar</a><br>页面下拉，选择需要的版本，然后点击链接，跳转之后自动下载。</p><h3 id="MinGW-Distro"><a href="#MinGW-Distro" class="headerlink" title="MinGW Distro"></a>MinGW Distro</h3><p>贴吧发现的，推荐这个发行版，简单易用，对新手友好。<br>MinGW Distro是gcc的一个发行版本，集成了boost，由Stephan T. Lavavej个人进行维护，STL的个人网站 <a href="https://nuwen.net/mingw.html" target="_blank" rel="noopener">https://nuwen.net/mingw.html</a> 有关于MinGW Distro的详细介绍和下载链接。<br>下载后，直接解压到C盘根目录，会得到一个MinGW的解压文件夹。</p><h3 id="Eclipse-C-开发"><a href="#Eclipse-C-开发" class="headerlink" title="Eclipse C++开发"></a>Eclipse C++开发</h3><p>下载Eclipse CDT版本，解压安装。新建CPP Project，编译器路径选择C:\MinGW。<br>若遇到“Launch failed. Binary not found”，依次选择Project / Properties / C/C++ Build / Settings /Binary parsers:<br>勾选“PE Windows Parser”。<br>每次run/debug之前记得先build project。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Windows下可用的C++ IDE有不少，毕业前一直用的都是微软的Visual Studio，从VS2010到VS2017，调试特别简单，功能也非常丰富。缺点是不支持多平台。其安装包也很大，高达几个GB，业余时间用来写点小代码感觉就是杀鸡用牛刀…换了不少的IDE，都觉得不太满意，Code::Blocks有集成了mingw的版本，安装和使用都特别简单，但感觉界面风格有点老气…换来换去，最终选择了Eclipse CDT + MinGW的组合。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="开发环境" scheme="https://cheung.site/categories/%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"/>
+    
+    
+      <category term="C++" scheme="https://cheung.site/tags/C/"/>
+    
+      <category term="MinGW" scheme="https://cheung.site/tags/MinGW/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>MMSEG中文分词</title>
+    <link href="https://cheung.site/2017/12/11/maximum-matching-segmentation-for-chinese-text/"/>
+    <id>https://cheung.site/2017/12/11/maximum-matching-segmentation-for-chinese-text/</id>
+    <published>2017-12-11T07:25:09.000Z</published>
+    <updated>2019-05-13T11:59:26.090Z</updated>
+    
+    <content type="html"><![CDATA[<p>对经典的MMSEG中文分词做一下笔记。<br>论文地址: <a href="http://technology.chtsai.org/mmseg/" target="_blank" rel="noopener">MMSEG: A Word Identification System for Mandarin Chinese Text Based on Two Variants of the Maximum Matching Algorithm</a></p><a id="more"></a><h3 id="词典（The-Lexicon）"><a href="#词典（The-Lexicon）" class="headerlink" title="词典（The Lexicon）"></a>词典（The Lexicon）</h3><p>词典包含两部分，第一部分是中文的词汇表，这部分是从网络搜集的中文词汇。第二部分是中文词汇及其附加的使用频率，用于MMSEG分词的最后一条规则。</p><h3 id="歧义消除规则"><a href="#歧义消除规则" class="headerlink" title="歧义消除规则"></a>歧义消除规则</h3><p>chunk：几个词组成的块，例如句子“晚上/一起/吃饭/吧”，“晚上/一起/吃饭”就是三个词组成的chunk，“吃饭/吧”是两个词组成的chunk。本文讨论的最大匹配规则中的chunk的最大长度设置为3。</p><h4 id="最大匹配（Maximum-matching）"><a href="#最大匹配（Maximum-matching）" class="headerlink" title="最大匹配（Maximum matching）"></a>最大匹配（Maximum matching）</h4><p>从最长的chunk中选取第一个单词，若有多个chunk的长度都是最长的，则应用下一条规则。</p><p>例如对于“眼看就要来了”，从“眼”开始的chunk有以下几个，“眼看 就要 来了”这个chunk最长，选取这个chunk的第一个词“眼看”作为分词结果。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. 眼看 就要 来了</span><br><span class="line">2. 眼看 就要 来</span><br><span class="line">3. 眼看 就 要</span><br><span class="line">4. 眼 看 就要</span><br><span class="line">5. 眼 看 就</span><br></pre></td></tr></table></figure><h4 id="最大化平均词长（Largest-average-word-length）"><a href="#最大化平均词长（Largest-average-word-length）" class="headerlink" title="最大化平均词长（Largest average word length）"></a>最大化平均词长（Largest average word length）</h4><p>这个规则基于“多字词比单字词更常见”的假设。<br>由于chunk的单词数是定长的（一般设置为3），在文本的结尾很可能只剩下不足3个单词。例如，下面的chunks的长度是一样的，但平均长度不同。这个规则会选取平均长度最大的chunk的第一个单词。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. _C1_ _C2_ _C3_</span><br><span class="line">2. _C1C2C3_</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 国际化</span><br><span class="line">2. 国际 化</span><br><span class="line">3. 国 际 化</span><br></pre></td></tr></table></figure><p>在上面的例子中，选取的是<code>_C1C2C3_</code>。<code>国际化</code>的分词是这个规则的一个应用实例。<br>这个规则只适用于chunk的单词数不足预设的值的情况（一般设定chunk的单词数为3），常见于文本末尾的分词，或者是短文本。<br>所有三个词组成的chunk，如果总长度是一样的话，平均长度也会是一样的。此时，需要进一步的歧义消除。</p><h4 id="最小化词长方差（Smallest-variance-of-word-lengths）"><a href="#最小化词长方差（Smallest-variance-of-word-lengths）" class="headerlink" title="最小化词长方差（Smallest variance of word lengths）"></a>最小化词长方差（Smallest variance of word lengths）</h4><p>这个规则基于“单词长度更倾向于均匀分布”的假设。</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. _C1C2_ _C3C4_ _C5C6_</span><br><span class="line">2. _C1C2C3_ _C4_ _C5C6_</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">研究 生命 起源</span><br><span class="line">研究生 命 起源</span><br></pre></td></tr></table></figure><p>选取词长变化最小的chunk的第一个词。词长变化一般用词长的方差来衡量。在上面的例子中，这个规则会选取<code>_C1C2_</code>作为分词结果。</p><h4 id="最大化单字词语素自由度-（Largest-sum-of-degree-of-morphemic-freedom-of-one-character-words）"><a href="#最大化单字词语素自由度-（Largest-sum-of-degree-of-morphemic-freedom-of-one-character-words）" class="headerlink" title="最大化单字词语素自由度 （Largest sum of degree of morphemic freedom of one-character words）"></a>最大化单字词语素自由度 （Largest sum of degree of morphemic freedom of one-character words）</h4><p>下面两个chunk的长度、词长方差、平均长度都一样：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1. _C1_ _C2_ _C3C4_</span><br><span class="line">2. _C1_ _C2C3_ _C4_</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">主要 是 因为</span><br><span class="line">主 要是 因为</span><br></pre></td></tr></table></figure><p>这个规则只考虑仅包含一个汉字的单字词。一个词的使用频率越高则它的自由度也越高，一个被高频使用的汉字更可能是一个单字词。计算chunk的自由度的方法是对单字词的词频的对数值求和。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;对经典的MMSEG中文分词做一下笔记。&lt;br&gt;论文地址: &lt;a href=&quot;http://technology.chtsai.org/mmseg/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;MMSEG: A Word Identification System for Mandarin Chinese Text Based on Two Variants of the Maximum Matching Algorithm&lt;/a&gt;&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="自然语言处理" scheme="https://cheung.site/categories/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
+    
+    
+      <category term="中文分词" scheme="https://cheung.site/tags/%E4%B8%AD%E6%96%87%E5%88%86%E8%AF%8D/"/>
+    
+      <category term="MMSEG" scheme="https://cheung.site/tags/MMSEG/"/>
     
   </entry>
   

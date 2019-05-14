@@ -111,7 +111,7 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="在给树莓派小车做加速和减速功能时遇到了脉冲宽度调制的问题，到底什么是脉冲宽度调制，跟智能小车直流电机的转速有什么关系？这几个问题没搞明白的话，感觉小车的控制程序很难继续往下写，于是搜集整理了一下资料。大概这也是不少非电子工程专业的同学在折腾树莓派GPIO时会遇到的问题。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:27.446Z">
+<meta property="og:updated_time" content="2019-05-14T04:48:47.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="树莓派脉冲宽度调制">
 <meta name="twitter:description" content="在给树莓派小车做加速和减速功能时遇到了脉冲宽度调制的问题，到底什么是脉冲宽度调制，跟智能小车直流电机的转速有什么关系？这几个问题没搞明白的话，感觉小车的控制程序很难继续往下写，于是搜集整理了一下资料。大概这也是不少非电子工程专业的同学在折腾树莓派GPIO时会遇到的问题。">
@@ -464,7 +464,7 @@
 <a id="more"></a>
 
 <p>我先（以目前浅显的理解）概括一下脉冲宽度调制（以下简称PWM）的作用：树莓派的GPIO口输出的是电子信号，二值状态的电子信号只有高电平(如3.3v)和低电平(0v)的区分，而我的直流伺服电机（小车轮子的小马达）在额定电压通电后的转速是100rpm（100转/分钟），那么我应该怎么让小车以50rpm的速度跑起来呢？假想你有一辆只能以100km/h速度行驶的小车，却要通过一条限速50km/h的街道，你怎么办？<br>方法挺好理解，你只需要驾车走走停停就行了，例如开车一分钟然后停车一分钟，再开车一分钟然后停车一分钟，循环此操作直到通过街道。这样整体下来你的车速（差不多）就是50km/h了。但一分钟才换挡一次，在你开车的一分钟期间看到你开车路过的行人（或者是测速仪）明显能感觉出来你超速了。于是，你把换挡的间隔缩小到了1秒钟，也就是说，开车1秒停车1秒（周期为2秒），这样子，你就骗过了测速仪，成功地以50km/h的速度通过了街道。如果你手速够快，每秒钟可以完成“开车1秒停车1秒”这样的操作10次（即周期为0.1s，频率为10Hz），那么这天衣无缝的开车技术足以瞒天过海，骗过街边的路人甲乙丙丁。<br>脉冲宽度调制的原理跟你上面开车的方法差不多，通过高电平与低电平的比例来模拟需要的电压。其中最重要的概念是占空比（Duty Cycle），即高电平时间占总时间的百分比（0 &lt;= dc &lt;= 1）。假设电信号恒定的高电平为10v，当占空比为0.25（即25%）时，模拟的就是2.5v的电压，占空比为0.5的话就是模拟5v的电压。<br>通过上面的知识，通过PWM控制树莓派小车的速度的方法就出来了，假设在额定的输入电压情况下，转速为100rpm，那么只需要把PWM占空比设置为50%，就可以实现50rpm的转速。输入电压不变的情况下，电机转速与占空比成正比。</p>
-<p>参考文献：<br><a href="https://www.mbtechworks.com/projects/raspberry-pi-pwm.html" target="_blank" rel="noopener">Raspberry Pi Pulse Width Modulation (PWM)</a></p>
+<p>参考文献：<br>[1]: <a href="https://www.mbtechworks.com/projects/raspberry-pi-pwm.html" target="_blank" rel="noopener">Raspberry Pi Pulse Width Modulation (PWM)</a></p>
 
       
     </div>
@@ -591,7 +591,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">35</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
