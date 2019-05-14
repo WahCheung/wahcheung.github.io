@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/sanji.jpg?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-sanji.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-sanji.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"always","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文的控制台输出都基于一个四台虚拟主机的Hadoop集群，这个集群的搭建过程参考 Hadoop完全分布式集群部署，集群概况如下：    角色 主机名(hostname) IP地址    Master sun 192.168.118.101   Slave mercury 192.168.118.102   Slave venus 192.168.118.103   Slave earth 192.">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop集群监控">
+<meta property="og:url" content="https://cheung.site/2018/07/28/hadoop-cluster-monitoring/index.html">
+<meta property="og:site_name" content="工程师学徒">
+<meta property="og:description" content="本文的控制台输出都基于一个四台虚拟主机的Hadoop集群，这个集群的搭建过程参考 Hadoop完全分布式集群部署，集群概况如下：    角色 主机名(hostname) IP地址    Master sun 192.168.118.101   Slave mercury 192.168.118.102   Slave venus 192.168.118.103   Slave earth 192.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-13T11:59:26.618Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hadoop集群监控">
+<meta name="twitter:description" content="本文的控制台输出都基于一个四台虚拟主机的Hadoop集群，这个集群的搭建过程参考 Hadoop完全分布式集群部署，集群概况如下：    角色 主机名(hostname) IP地址    Master sun 192.168.118.101   Slave mercury 192.168.118.102   Slave venus 192.168.118.103   Slave earth 192.">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="工程师学徒" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://cheung.site/2018/07/28/hadoop-cluster-monitoring/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Hadoop集群监控 | 工程师学徒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">工程师学徒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cheung.site/2018/07/28/hadoop-cluster-monitoring/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="龚华昌">
+      <meta itemprop="description" content="<h6>每一个认真的技术人<br/>心底都有一个技术英雄梦</h6>">
+      <meta itemprop="image" content="/images/sanji.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="工程师学徒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hadoop集群监控
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-07-28 21:13:47" itemprop="dateCreated datePublished" datetime="2018-07-28T21:13:47+08:00">2018-07-28</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Hadoop/" itemprop="url" rel="index"><span itemprop="name">Hadoop</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文的控制台输出都基于一个四台虚拟主机的Hadoop集群，这个集群的搭建过程参考 <a href="/2018/07/25/install-apache-hadoop-on-multi-node-cluster/">Hadoop完全分布式集群部署</a>，集群概况如下：</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>主机名(hostname)</th>
+<th>IP地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Master</td>
+<td>sun</td>
+<td>192.168.118.101</td>
+</tr>
+<tr>
+<td>Slave</td>
+<td>mercury</td>
+<td>192.168.118.102</td>
+</tr>
+<tr>
+<td>Slave</td>
+<td>venus</td>
+<td>192.168.118.103</td>
+</tr>
+<tr>
+<td>Slave</td>
+<td>earth</td>
+<td>192.168.118.104</td>
+</tr>
+</tbody></table>
+<a id="more"></a>
+
+<h2 id="监控HDFS"><a href="#监控HDFS" class="headerlink" title="监控HDFS"></a>监控HDFS</h2><h3 id="通过控制台监控HDFS"><a href="#通过控制台监控HDFS" class="headerlink" title="通过控制台监控HDFS"></a>通过控制台监控HDFS</h3><p>HDFS的命令都是通过${HADOOP_HOME}/bin/hdfs脚本调用的。在控制台执行<code>hdfs</code>会打印hdfs包含的参数命令的用法，看着一目了然，如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">cheung@sun:~$ hdfs</span><br><span class="line">Usage: hdfs [--config confdir] [--loglevel loglevel] COMMAND</span><br><span class="line">       <span class="built_in">where</span> COMMAND is one of:</span><br><span class="line">  dfs                  run a filesystem <span class="built_in">command</span> on the file systems supported <span class="keyword">in</span> Hadoop.</span><br><span class="line">  classpath            prints the classpath</span><br><span class="line">  namenode -format     format the DFS filesystem</span><br><span class="line">  secondarynamenode    run the DFS secondary namenode</span><br><span class="line">  namenode             run the DFS namenode</span><br><span class="line">  journalnode          run the DFS journalnode</span><br><span class="line">  zkfc                 run the ZK Failover Controller daemon</span><br><span class="line">  datanode             run a DFS datanode</span><br><span class="line">  dfsadmin             run a DFS admin client</span><br><span class="line">  haadmin              run a DFS HA admin client</span><br><span class="line">  fsck                 run a DFS filesystem checking utility</span><br><span class="line">  balancer             run a cluster balancing utility</span><br><span class="line">  jmxget               get JMX exported values from NameNode or DataNode.</span><br><span class="line">  mover                run a utility to move block replicas across</span><br><span class="line">                       storage types</span><br><span class="line">  oiv                  apply the offline fsimage viewer to an fsimage</span><br><span class="line">  oiv_legacy           apply the offline fsimage viewer to an legacy fsimage</span><br><span class="line">  oev                  apply the offline edits viewer to an edits file</span><br><span class="line">  fetchdt              fetch a delegation token from the NameNode</span><br><span class="line">  getconf              get config values from configuration</span><br><span class="line">  groups               get the groups <span class="built_in">which</span> users belong to</span><br><span class="line">  snapshotDiff         diff two snapshots of a directory or diff the</span><br><span class="line">                       current directory contents with a snapshot</span><br><span class="line">  lsSnapshottableDir   list all snapshottable <span class="built_in">dirs</span> owned by the current user</span><br><span class="line">						Use -<span class="built_in">help</span> to see options</span><br><span class="line">  portmap              run a portmap service</span><br><span class="line">  nfs3                 run an NFS version 3 gateway</span><br><span class="line">  cacheadmin           configure the HDFS cache</span><br><span class="line">  crypto               configure HDFS encryption zones</span><br><span class="line">  storagepolicies      list/get/<span class="built_in">set</span> block storage policies</span><br><span class="line">  version              <span class="built_in">print</span> the version</span><br><span class="line"></span><br><span class="line">Most commands <span class="built_in">print</span> <span class="built_in">help</span> when invoked w/o parameters.</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>hdfs dfsadmin</code>命令可以获取关于集群的有用信息。<br>例如下面的命令可以获取hadoop集群目前运行的概况(例如集群容量、使用率和live datanodes)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hdfs dfsadmin -report</span><br></pre></td></tr></table></figure>
+
+<p>下面是在四台虚拟主机搭建的hadoop集群执行report命令的返回样例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">cheung@sun:~$ hdfs dfsadmin -report</span><br><span class="line">Configured Capacity: 56669491200 (52.78 GB)</span><br><span class="line">Present Capacity: 29869539328 (27.82 GB)</span><br><span class="line">DFS Remaining: 29869441024 (27.82 GB)</span><br><span class="line">DFS Used: 98304 (96 KB)</span><br><span class="line">DFS Used%: 0.00%</span><br><span class="line">Under replicated blocks: 0</span><br><span class="line">Blocks with corrupt replicas: 0</span><br><span class="line">Missing blocks: 0</span><br><span class="line">Missing blocks (with replication factor 1): 0</span><br><span class="line"></span><br><span class="line">-------------------------------------------------</span><br><span class="line">Live datanodes (3):</span><br><span class="line"></span><br><span class="line">Name: 192.168.118.102:50010 (mercury)</span><br><span class="line">Hostname: mercury</span><br><span class="line">Decommission Status : Normal</span><br><span class="line">Configured Capacity: 18889830400 (17.59 GB)</span><br><span class="line">DFS Used: 32768 (32 KB)</span><br><span class="line">Non DFS Used: 7826771968 (7.29 GB)</span><br><span class="line">DFS Remaining: 10079883264 (9.39 GB)</span><br><span class="line">DFS Used%: 0.00%</span><br><span class="line">DFS Remaining%: 53.36%</span><br><span class="line">Configured Cache Capacity: 0 (0 B)</span><br><span class="line">Cache Used: 0 (0 B)</span><br><span class="line">Cache Remaining: 0 (0 B)</span><br><span class="line">Cache Used%: 100.00%</span><br><span class="line">Cache Remaining%: 0.00%</span><br><span class="line">Xceivers: 1</span><br><span class="line">Last contact: Sat Jul 28 21:35:44 CST 2018</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Name: 192.168.118.104:50010 (earth)</span><br><span class="line">Hostname: earth</span><br><span class="line">Decommission Status : Normal</span><br><span class="line">Configured Capacity: 18889830400 (17.59 GB)</span><br><span class="line">DFS Used: 32768 (32 KB)</span><br><span class="line">Non DFS Used: 7826591744 (7.29 GB)</span><br><span class="line">DFS Remaining: 10080063488 (9.39 GB)</span><br><span class="line">DFS Used%: 0.00%</span><br><span class="line">DFS Remaining%: 53.36%</span><br><span class="line">Configured Cache Capacity: 0 (0 B)</span><br><span class="line">Cache Used: 0 (0 B)</span><br><span class="line">Cache Remaining: 0 (0 B)</span><br><span class="line">Cache Used%: 100.00%</span><br><span class="line">Cache Remaining%: 0.00%</span><br><span class="line">Xceivers: 1</span><br><span class="line">Last contact: Sat Jul 28 21:35:44 CST 2018</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Name: 192.168.118.103:50010 (venus)</span><br><span class="line">Hostname: venus</span><br><span class="line">Decommission Status : Normal</span><br><span class="line">Configured Capacity: 18889830400 (17.59 GB)</span><br><span class="line">DFS Used: 32768 (32 KB)</span><br><span class="line">Non DFS Used: 8197160960 (7.63 GB)</span><br><span class="line">DFS Remaining: 9709494272 (9.04 GB)</span><br><span class="line">DFS Used%: 0.00%</span><br><span class="line">DFS Remaining%: 51.40%</span><br><span class="line">Configured Cache Capacity: 0 (0 B)</span><br><span class="line">Cache Used: 0 (0 B)</span><br><span class="line">Cache Remaining: 0 (0 B)</span><br><span class="line">Cache Used%: 100.00%</span><br><span class="line">Cache Remaining%: 0.00%</span><br><span class="line">Xceivers: 1</span><br><span class="line">Last contact: Sat Jul 28 21:35:44 CST 2018</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>help</code>命令可以获取<code>dfsadmin</code>的更多用法:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hdfs dfsadmin -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="通过浏览器-WebUI-监控HDFS"><a href="#通过浏览器-WebUI-监控HDFS" class="headerlink" title="通过浏览器(WebUI)监控HDFS"></a>通过浏览器(WebUI)监控HDFS</h3><p>可视化真是个好东西，通过WebUI监控HDFS直观多了。master(namenode)的WebUI通过在<code>hdfs-site.xml</code>中设置<code>dfs.namenode.http-address</code>来设置，默认namenode的<code>50070</code>端口。浏览器打开地址(hadoop-master-ip替换为hadoop集群master的ip): <a href="http://hadoop-master-ip:50070" target="_blank" rel="noopener">http://hadoop-master-ip:50070</a></p>
+<center>![HDFS WebUI](/images/hadoop-cluster-monitoring/hdfs-webui.png)</center><br>
+
+<blockquote>
+<p>我们可以看到页面顶部菜单栏有如下几个监控目标:<br>|Overview|DataNodes|Datanode Volumn Failures|Snapshot|Startup Progress|Utilities|<br>Overview: 集群概况，与通过<code>hdfs dfsadmin -report</code>获取的信息类似；<br>DataNodes: 各个DN(Datanode)的状态、容量、Blocks数量等信息；<br>Datanode Volumn Failures: 记录DN的异常；<br>Snapshot: Snapshot Summary<br>Startup Progress: 记录HDFS启动过程和状态，包括装载fsimage和edits，checkpoint信息；<br>Utilities: 这个很方便实用！下拉有两个选项，”Browse the file system”和”Logs”，”Browse the file system”以图形界面的方式查看HDFS文件系统存储的内容，”Logs”可以查看hadoop-master节点的日志。</p>
+</blockquote>
+<h2 id="监控YARN"><a href="#监控YARN" class="headerlink" title="监控YARN"></a>监控YARN</h2><h3 id="通过控制台监控YARN"><a href="#通过控制台监控YARN" class="headerlink" title="通过控制台监控YARN"></a>通过控制台监控YARN</h3><p>控制台输入<code>yarn</code>会输出<code>yarn</code>命令的用法。下面的命令输出yarn集群的节点信息。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cheung@sun:~$ yarn node -list</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">18/07/28 23:58:07 INFO client.RMProxy: Connecting to ResourceManager at sun/192.168.118.101:8032</span><br><span class="line">Total Nodes:3</span><br><span class="line">         Node-Id	     Node-State	Node-Http-Address	Number-of-Running-Containers</span><br><span class="line">     earth:40373	        RUNNING	       earth:8042	                           0</span><br><span class="line">     venus:46595	        RUNNING	       venus:8042	                           0</span><br><span class="line">   mercury:33455	        RUNNING	     mercury:8042	                           0</span><br></pre></td></tr></table></figure>
+
+<p>[贴心提醒：hdfs命令和yarn命令不需要在master上执行也可以获得一样的结果。]</p>
+<h3 id="通过浏览器-WebUI-监控YARN"><a href="#通过浏览器-WebUI-监控YARN" class="headerlink" title="通过浏览器(WebUI)监控YARN"></a>通过浏览器(WebUI)监控YARN</h3><p>YARN默认http端口为8088，浏览器打开地址(hadoop-master-ip替换为hadoop集群master的ip): <a href="http://hadoop-master-ip:8088" target="_blank" rel="noopener">http://hadoop-master-ip:8088</a></p>
+<center>![YARN WebUI](/images/hadoop-cluster-monitoring/yarn-webui.png)</center><br>
+
+<h2 id="日志监控"><a href="#日志监控" class="headerlink" title="日志监控"></a>日志监控</h2><p>通过<code>jps</code>/<code>hdfs</code>/<code>yarn</code>这些命令行工具，我们可以快速查看集群的状态，但如果某些节点出问题了或者是发现某些进程没有正常启动(总之就是发现异常吧)，还是要通过日志打印来了解异常的详情然后寻求解决办法。Hadoop的日志在<code>${HADOOP_HOME}/logs</code>目录下。</p>
+<p>参考文献:<br>[1] <a href="https://www.linode.com/docs/databases/hadoop/how-to-install-and-set-up-hadoop-cluster/" target="_blank" rel="noopener">https://www.linode.com/docs/databases/hadoop/how-to-install-and-set-up-hadoop-cluster/</a><br>[2] <a href="http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml" target="_blank" rel="noopener">http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml</a><br>[3] <a href="http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml" target="_blank" rel="noopener">http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">本文结束<i class="fa fa-paw"></i>感谢您的阅读</div>
+    
+</div>
+      
+    </div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"><i class="fa fa-tag"></i> Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/07/25/linux-tutorial-for-beginners/" rel="next" title="Linux的一些基础知识">
+                <i class="fa fa-chevron-left"></i> Linux的一些基础知识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/04/tiny-httpd-annotation/" rel="prev" title="tinyhttpd源码阅读">
+                tinyhttpd源码阅读 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/sanji.jpg" alt="龚华昌">
+            
+              <p class="site-author-name" itemprop="name">龚华昌</p>
+              <div class="site-description motion-element" itemprop="description"><h6>每一个认真的技术人<br>心底都有一个技术英雄梦</h6></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">42</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/wahcheung" title="GitHub &rarr; https://github.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="mailto:huachang.gong@outlook.com" title="E-Mail &rarr; mailto:huachang.gong@outlook.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://leetcode.com/wahcheung" title="LeetCode &rarr; https://leetcode.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-trophy"></i></a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#监控HDFS"><span class="nav-number">1.</span> <span class="nav-text">监控HDFS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过控制台监控HDFS"><span class="nav-number">1.1.</span> <span class="nav-text">通过控制台监控HDFS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过浏览器-WebUI-监控HDFS"><span class="nav-number">1.2.</span> <span class="nav-text">通过浏览器(WebUI)监控HDFS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监控YARN"><span class="nav-number">2.</span> <span class="nav-text">监控YARN</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过控制台监控YARN"><span class="nav-number">2.1.</span> <span class="nav-text">通过控制台监控YARN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过浏览器-WebUI-监控YARN"><span class="nav-number">2.2.</span> <span class="nav-text">通过浏览器(WebUI)监控YARN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志监控"><span class="nav-number">3.</span> <span class="nav-text">日志监控</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">龚华昌</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: 'wahcheung.github.io',
+    owner: 'wahcheung',
+    admin: ['wahcheung'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+        // ref: https://github.com/ForbesLindesay/unescape-html
+        var unescapeHtml = function(html) {
+          return String(html)
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, '\'')
+            .replace(/&#x3A;/g, ':')
+            // replace all the other &#x; chars
+            .replace(/&#(\d+);/g, function (m, p) { return String.fromCharCode(p); })
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&');
+        };
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                content = unescapeHtml(content);
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
+<!-- 页面点击烟花特效 -->
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+  <script type="text/javascript" src="/js/anime.min.js"></script>
+  <script type="text/javascript" src="/js/fireworks.js"></script>
+

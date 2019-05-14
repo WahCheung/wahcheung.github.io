@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/sanji.jpg?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-sanji.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-sanji.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"always","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="默认的Vim配置给人的感觉实在无法称得上是编辑器之神, 在使用简单的Vim配置好久之后, 终于有时间好好折腾一下Vim插件, 一番挣扎之后, 终于顺利为Vim加上代码自动补全的功能。">
+<meta name="keywords" content="Vim">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vim与YouCompleteMe代码补全">
+<meta property="og:url" content="https://cheung.site/2018/09/23/vim-as-an-ide/index.html">
+<meta property="og:site_name" content="工程师学徒">
+<meta property="og:description" content="默认的Vim配置给人的感觉实在无法称得上是编辑器之神, 在使用简单的Vim配置好久之后, 终于有时间好好折腾一下Vim插件, 一番挣扎之后, 终于顺利为Vim加上代码自动补全的功能。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-13T11:59:27.434Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vim与YouCompleteMe代码补全">
+<meta name="twitter:description" content="默认的Vim配置给人的感觉实在无法称得上是编辑器之神, 在使用简单的Vim配置好久之后, 终于有时间好好折腾一下Vim插件, 一番挣扎之后, 终于顺利为Vim加上代码自动补全的功能。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="工程师学徒" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://cheung.site/2018/09/23/vim-as-an-ide/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Vim与YouCompleteMe代码补全 | 工程师学徒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">工程师学徒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cheung.site/2018/09/23/vim-as-an-ide/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="龚华昌">
+      <meta itemprop="description" content="<h6>每一个认真的技术人<br/>心底都有一个技术英雄梦</h6>">
+      <meta itemprop="image" content="/images/sanji.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="工程师学徒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Vim与YouCompleteMe代码补全
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-23 17:08:05" itemprop="dateCreated datePublished" datetime="2018-09-23T17:08:05+08:00">2018-09-23</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>默认的Vim配置给人的感觉实在无法称得上是编辑器之神, 在使用简单的Vim配置好久之后, 终于有时间好好折腾一下Vim插件, 一番挣扎之后, 终于顺利为Vim加上代码自动补全的功能。</p>
+</blockquote>
+<a id="more"></a>
+<p>以下过程均基于Ubuntu 16.04, 不同的Linux发行版可能在安装YouCompleteMe时稍有差异, YouCompleteMe主页 (<a href="https://github.com/Valloric/YouCompleteMe" target="_blank" rel="noopener">传送门</a>) 有说明。</p>
+<h3 id="安装Vim和Git"><a href="#安装Vim和Git" class="headerlink" title="安装Vim和Git"></a>安装Vim和Git</h3><p>如果尚未安装git和vim, 使用下面命令安装:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install git</span><br><span class="line">$ sudo apt-get install vim</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装Vim插件管理工具Vundle"><a href="#安装Vim插件管理工具Vundle" class="headerlink" title="安装Vim插件管理工具Vundle"></a>安装Vim插件管理工具Vundle</h3><p>使用Vundle作为插件管理工具 (Github Vundle传送门)[<a href="https://github.com/VundleVim/Vundle.vim]" target="_blank" rel="noopener">https://github.com/VundleVim/Vundle.vim]</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim</span><br></pre></td></tr></table></figure>
+
+<p>然后需要进行简单的配置, 参考Vundle的GitHub主页中的Quick Start, 编辑<code>~/.vimrc</code>文件, 在文件开头添加以下内容, 用于设置使用Vundle来管理插件:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span> nocompatible              <span class="string">" 去除VI一致性,必须</span></span><br><span class="line"><span class="string">filetype off                  "</span> 必须</span><br><span class="line"></span><br><span class="line"><span class="string">" 设置包括vundle和初始化相关的runtime path</span></span><br><span class="line"><span class="string">set rtp+=~/.vim/bundle/Vundle.vim</span></span><br><span class="line"><span class="string">call vundle#begin()</span></span><br><span class="line"><span class="string">"</span> 另一种选择, 指定一个vundle安装插件的路径</span><br><span class="line"><span class="string">"call vundle#begin('~/some/path/here')</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 让vundle管理插件版本,必须</span><br><span class="line">Plugin <span class="string">'VundleVim/Vundle.vim'</span></span><br><span class="line"></span><br><span class="line"><span class="string">" 以下范例用来支持不同格式的插件安装.</span></span><br><span class="line"><span class="string">"</span> 请将安装插件的命令放在vundle<span class="comment">#begin和vundle#end之间.</span></span><br><span class="line"><span class="string">" Github上的插件</span></span><br><span class="line"><span class="string">"</span> 格式为 Plugin <span class="string">'用户名/插件仓库名'</span></span><br><span class="line">Plugin <span class="string">'tpope/vim-fugitive'</span></span><br><span class="line"><span class="string">" 来自 http://vim-scripts.org/vim/scripts.html 的插件</span></span><br><span class="line"><span class="string">"</span> Plugin <span class="string">'插件名称'</span> 实际上是 Plugin <span class="string">'vim-scripts/插件仓库名'</span> 只是此处的用户名可以省略</span><br><span class="line">Plugin <span class="string">'L9'</span></span><br><span class="line"><span class="string">" 由Git支持但不再github上的插件仓库 Plugin 'git clone 后面的地址'</span></span><br><span class="line"><span class="string">Plugin 'git://git.wincent.com/command-t.git'</span></span><br><span class="line"><span class="string">"</span> 本地的Git仓库(例如自己的插件) Plugin <span class="string">'file:///+本地插件仓库绝对路径'</span></span><br><span class="line">Plugin <span class="string">'file:///home/gmarik/path/to/plugin'</span></span><br><span class="line"><span class="string">" 插件在仓库的子目录中.</span></span><br><span class="line"><span class="string">"</span> 正确指定路径用以设置runtimepath. 以下范例插件在sparkup/vim目录下</span><br><span class="line">Plugin <span class="string">'rstacruz/sparkup'</span>, &#123;<span class="string">'rtp'</span>: <span class="string">'vim/'</span>&#125;</span><br><span class="line"><span class="string">" 安装L9，如果已经安装过这个插件，可利用以下格式避免命名冲突</span></span><br><span class="line"><span class="string">Plugin 'ascenator/L9', &#123;'name': 'newL9'&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 你的所有插件需要在下面这行之前</span><br><span class="line">call vundle<span class="comment">#end()            " 必须</span></span><br><span class="line">filetype plugin indent on    <span class="string">" 必须 加载vim自带和插件相应的语法和文件类型相关脚本</span></span><br><span class="line"><span class="string">"</span> 忽视插件改变缩进,可以使用以下替代:</span><br><span class="line"><span class="string">"filetype plugin on</span></span><br><span class="line"><span class="string">"</span></span><br><span class="line"><span class="string">" 简要帮助文档</span></span><br><span class="line"><span class="string">"</span> :PluginList       - 列出所有已配置的插件</span><br><span class="line"><span class="string">" :PluginInstall    - 安装插件,追加 `!` 用以更新或使用 :PluginUpdate</span></span><br><span class="line"><span class="string">"</span> :PluginSearch foo - 搜索 foo ; 追加 `!` 清除本地缓存</span><br><span class="line"><span class="string">" :PluginClean      - 清除未使用插件,需要确认; 追加 `!` 自动批准移除未使用插件</span></span><br><span class="line"><span class="string">"</span></span><br><span class="line"><span class="string">" 查阅 :h vundle 获取更多细节和wiki以及FAQ</span></span><br><span class="line"><span class="string">"</span> 将你自己对非插件片段放在这行之后</span><br></pre></td></tr></table></figure>
+
+<p>打开<code>vim</code>, 执行<code>:PluginInstall</code>, Vundle就会开始安装插件。</p>
+<h3 id="安装YouCompleteMe插件"><a href="#安装YouCompleteMe插件" class="headerlink" title="安装YouCompleteMe插件"></a>安装YouCompleteMe插件</h3><p><a href="https://github.com/Valloric/YouCompleteMe" target="_blank" rel="noopener">YouCompleteMe Github主页</a><br>一开始我是通过直接在<code>.vimrc</code>中添加YouCompleteMe的插件行, 然后运行<code>vim</code>再执行<code>:PluginInstall</code>来让Vunble自动安装YouCompleteMe插件的, 但安装YouCompleteMe耗时太长, 看不到进度, 还出了点问题, 就改用下面手动克隆YouCompleteMe仓库的方法了:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.vim/bundle/</span><br><span class="line">$ git <span class="built_in">clone</span> https://github.com/Valloric/YouCompleteMe.git</span><br></pre></td></tr></table></figure>
+
+<p>根据<code>YouCompleteMe</code>主页给出的安装指引, <em>Install development tools, CMake, and Python headers:</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install build-essential cmake python3-dev</span><br></pre></td></tr></table></figure>
+
+<p>更新子模块, 由于依赖比较多, 下面的命令会下载多个git仓库, 耗时比较长。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.vim/bundle/YouCompleteMe</span><br><span class="line">$ git submodule update --init --recursive</span><br></pre></td></tr></table></figure>
+
+<p>YouCompleteMe Github主页给出的做法是直接使用<code>python3 install.py --clang-completer</code>命令进行安装, 但在我的机器上, 这个过程一直都没成功, 中间下载clang的时候time out了。<br>于是手动安装clang:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install clang</span><br></pre></td></tr></table></figure>
+
+<p>然后使用YouCompleteMe自带的安装脚本的进行安装:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.vim/bundle/YouCompleteMe</span><br><span class="line">$ python3 install.py --clang-completer --system-libclang</span><br></pre></td></tr></table></figure>
+
+<p>新加入插件在<code>.vimrc</code>中的添加位置在上面Vundle的配置说明中已经说明白了, 现在添加:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Plugin <span class="string">'Valloric/YouCompleteMe'</span></span><br></pre></td></tr></table></figure>
+
+<p>运行<code>vim</code>, 执行<code>:PluginInstall</code>, 可以在左下角看到安装完成。</p>
+<p>随便打开一个cpp文件, 有下面提示:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NoExtraConfDetected: No .ycm_extra_conf.py file detected, so no compile flags are available. Thus no semantic support <span class="keyword">for</span> C/C++/ObjC/ObjC++.</span><br></pre></td></tr></table></figure>
+
+<p>参考 <a href="https://github.com/Valloric/YouCompleteMe/issues/700" target="_blank" rel="noopener">YouCompleteMe issues 700</a>, 在<code>.vimrc</code>中添加:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> g:ycm_global_ycm_extra_conf = <span class="string">'~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'</span></span><br></pre></td></tr></table></figure>
+
+<p>然而, 进入<code>~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/</code>, 然后<code>ls -la</code>查看目录文件, 所谓的<em>.ycm_extra_conf.py</em>并不存在!
+索性进入YouCompleteMe目录进行文件查找:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.vim/bundle/YouCompleteMe</span><br><span class="line">$ find . -name <span class="string">".ycm_extra_conf.py"</span></span><br></pre></td></tr></table></figure>
+
+<p>竟然找到不少, 如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">./python/ycm/tests/testdata/.ycm_extra_conf.py</span><br><span class="line">./.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/examples/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/cpp/ycm/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/get_doc/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/noflags/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/driver_mode_cl/flag/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/driver_mode_cl/executable/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/client_data/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/<span class="built_in">test</span>-include/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/clang/testdata/general_fallback/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/testdata/client/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/testdata/extra_conf/project/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/cs/testdata/testy-multiple-solutions/solution-not-named-like-folder/extra-conf-rel/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/cs/testdata/testy-multiple-solutions/solution-not-named-like-folder/extra-conf-abs/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/ycmd/tests/cs/testdata/testy-multiple-solutions/solution-not-named-like-folder/extra-conf-bad/testy/.ycm_extra_conf.py</span><br><span class="line">./third_party/ycmd/.ycm_extra_conf.py</span><br></pre></td></tr></table></figure>
+
+<p>看了几个, 个人感觉<code>~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py</code>的配置应该比较全, 就选择了这个, 把它复制到<code>~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/</code>目录下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp ~/.vim/bundle/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py</span><br></pre></td></tr></table></figure>
+
+<p>记得在<code>.vimrc</code>中添加如下一行配置:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> g:ycm_global_ycm_extra_conf = <span class="string">'~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="vimrc文件"><a href="#vimrc文件" class="headerlink" title=".vimrc文件"></a>.vimrc文件</h3><p>整个<code>.vimrc</code>文件如下:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">" 参考Vundle Github主页: https://github.com/VundleVim/Vundle.vim/blob/master/README_ZH_CN.md</span></span><br><span class="line"><span class="string">set nocompatible              "</span> 去除VI一致性,必须</span><br><span class="line">filetype off                  <span class="string">" 必须</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 设置包括vundle和初始化相关的runtime path</span><br><span class="line"><span class="built_in">set</span> rtp+=~/.vim/bundle/Vundle.vim</span><br><span class="line">call vundle<span class="comment">#begin()</span></span><br><span class="line"><span class="string">" 另一种选择, 指定一个vundle安装插件的路径</span></span><br><span class="line"><span class="string">"</span>call vundle<span class="comment">#begin('~/some/path/here')</span></span><br><span class="line"></span><br><span class="line"><span class="string">" 让vundle管理插件版本,必须</span></span><br><span class="line"><span class="string">Plugin 'VundleVim/Vundle.vim'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Plugin 'Valloric/YouCompleteMe'</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 以下范例用来支持不同格式的插件安装.</span><br><span class="line"><span class="string">" 请将安装插件的命令放在vundle#begin和vundle#end之间.</span></span><br><span class="line"><span class="string">"</span> Github上的插件</span><br><span class="line"><span class="string">" 格式为 Plugin '用户名/插件仓库名'</span></span><br><span class="line"><span class="string">"</span>Plugin <span class="string">'tpope/vim-fugitive'</span></span><br><span class="line"><span class="string">" 来自 http://vim-scripts.org/vim/scripts.html 的插件</span></span><br><span class="line"><span class="string">"</span> Plugin <span class="string">'插件名称'</span> 实际上是 Plugin <span class="string">'vim-scripts/插件仓库名'</span> 只是此处的用户名可以省略</span><br><span class="line"><span class="string">"Plugin 'L9'</span></span><br><span class="line"><span class="string">"</span> 由Git支持但不再github上的插件仓库 Plugin <span class="string">'git clone 后面的地址'</span></span><br><span class="line"><span class="string">"Plugin 'git://git.wincent.com/command-t.git'</span></span><br><span class="line"><span class="string">"</span> 本地的Git仓库(例如自己的插件) Plugin <span class="string">'file:///+本地插件仓库绝对路径'</span></span><br><span class="line"><span class="string">"Plugin 'file:///home/gmarik/path/to/plugin'</span></span><br><span class="line"><span class="string">"</span> 插件在仓库的子目录中.</span><br><span class="line"><span class="string">" 正确指定路径用以设置runtimepath. 以下范例插件在sparkup/vim目录下</span></span><br><span class="line"><span class="string">"</span>Plugin <span class="string">'rstacruz/sparkup'</span>, &#123;<span class="string">'rtp'</span>: <span class="string">'vim/'</span>&#125;</span><br><span class="line"><span class="string">" 安装L9，如果已经安装过这个插件，可利用以下格式避免命名冲突</span></span><br><span class="line"><span class="string">"</span>Plugin <span class="string">'ascenator/L9'</span>, &#123;<span class="string">'name'</span>: <span class="string">'newL9'</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="string">" 你的所有插件需要在下面这行之前</span></span><br><span class="line"><span class="string">call vundle#end()            "</span> 必须</span><br><span class="line">filetype plugin indent on    <span class="string">" 必须 加载vim自带和插件相应的语法和文件类型相关脚本</span></span><br><span class="line"><span class="string">"</span> 忽视插件改变缩进,可以使用以下替代:</span><br><span class="line"><span class="string">"filetype plugin on</span></span><br><span class="line"><span class="string">"</span></span><br><span class="line"><span class="string">" 简要帮助文档</span></span><br><span class="line"><span class="string">"</span> :PluginList       - 列出所有已配置的插件</span><br><span class="line"><span class="string">" :PluginInstall    - 安装插件,追加 `!` 用以更新或使用 :PluginUpdate</span></span><br><span class="line"><span class="string">"</span> :PluginSearch foo - 搜索 foo ; 追加 `!` 清除本地缓存</span><br><span class="line"><span class="string">" :PluginClean      - 清除未使用插件,需要确认; 追加 `!` 自动批准移除未使用插件</span></span><br><span class="line"><span class="string">"</span></span><br><span class="line"><span class="string">" 查阅 :h vundle 获取更多细节和wiki以及FAQ</span></span><br><span class="line"><span class="string">"</span> 将你自己对非插件片段放在这行之后</span><br><span class="line"></span><br><span class="line"><span class="built_in">let</span> g:ycm_global_ycm_extra_conf = <span class="string">'~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'</span></span><br><span class="line"></span><br><span class="line"><span class="string">" 语法高亮</span></span><br><span class="line"><span class="string">syntax on</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 显示行号</span><br><span class="line"><span class="built_in">set</span> number</span><br><span class="line"></span><br><span class="line"><span class="string">" 搜索忽略大小写</span></span><br><span class="line"><span class="string">set ignorecase </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 突出显示当前行</span><br><span class="line"><span class="built_in">set</span> cursorline </span><br><span class="line"></span><br><span class="line"><span class="string">" 搜索高亮</span></span><br><span class="line"><span class="string">set hlsearch   </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 搜索逐字符高亮</span><br><span class="line"><span class="built_in">set</span> incsearch  </span><br><span class="line"></span><br><span class="line"><span class="string">" 自动缩进</span></span><br><span class="line"><span class="string">set autoindent </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">"</span> 使用C风格的缩进</span><br><span class="line"><span class="built_in">set</span> cindent    </span><br><span class="line"></span><br><span class="line"><span class="string">" 设置Tab键的行为</span></span><br><span class="line"><span class="string">"</span> 将文件的Tab键显示为几个空格, 只做解析显示, 不进行实际转换</span><br><span class="line"><span class="built_in">set</span> tabstop=2</span><br><span class="line"><span class="string">" 缩进宽度</span></span><br><span class="line"><span class="string">set shiftwidth=2</span></span><br><span class="line"><span class="string">"</span> 将输入的Tab键转成空格</span><br><span class="line"><span class="built_in">set</span> expandtab</span><br><span class="line"><span class="string">" 编辑时, 一个Tab表现为2个空格</span></span><br><span class="line"><span class="string">"</span> Tab键等于2个空格宽度, 退格时把两个空格当作一个Tab删除</span><br><span class="line"><span class="built_in">set</span> softtabstop=2</span><br><span class="line"></span><br><span class="line"><span class="string">" 高亮显示匹配的括号</span></span><br><span class="line"><span class="string">set showmatch</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">本文结束<i class="fa fa-paw"></i>感谢您的阅读</div>
+    
+</div>
+      
+    </div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vim/" rel="tag"><i class="fa fa-tag"></i> Vim</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/08/28/linux-on-windows/" rel="next" title="在Windows 10上运行Linux子系统">
+                <i class="fa fa-chevron-left"></i> 在Windows 10上运行Linux子系统
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/10/16/leveldb-installation/" rel="prev" title="LevelDB编译、安装与使用">
+                LevelDB编译、安装与使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/sanji.jpg" alt="龚华昌">
+            
+              <p class="site-author-name" itemprop="name">龚华昌</p>
+              <div class="site-description motion-element" itemprop="description"><h6>每一个认真的技术人<br>心底都有一个技术英雄梦</h6></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">42</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/wahcheung" title="GitHub &rarr; https://github.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="mailto:huachang.gong@outlook.com" title="E-Mail &rarr; mailto:huachang.gong@outlook.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://leetcode.com/wahcheung" title="LeetCode &rarr; https://leetcode.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-trophy"></i></a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Vim和Git"><span class="nav-number">1.</span> <span class="nav-text">安装Vim和Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Vim插件管理工具Vundle"><span class="nav-number">2.</span> <span class="nav-text">安装Vim插件管理工具Vundle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装YouCompleteMe插件"><span class="nav-number">3.</span> <span class="nav-text">安装YouCompleteMe插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vimrc文件"><span class="nav-number">4.</span> <span class="nav-text">.vimrc文件</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">龚华昌</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: 'wahcheung.github.io',
+    owner: 'wahcheung',
+    admin: ['wahcheung'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+        // ref: https://github.com/ForbesLindesay/unescape-html
+        var unescapeHtml = function(html) {
+          return String(html)
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, '\'')
+            .replace(/&#x3A;/g, ':')
+            // replace all the other &#x; chars
+            .replace(/&#(\d+);/g, function (m, p) { return String.fromCharCode(p); })
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&');
+        };
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                content = unescapeHtml(content);
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
+<!-- 页面点击烟花特效 -->
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+  <script type="text/javascript" src="/js/anime.min.js"></script>
+  <script type="text/javascript" src="/js/fireworks.js"></script>
+

@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/sanji.jpg?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-sanji.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-sanji.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"always","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="最近在看《Introduction to Information Retrieval》（中文版为《信息检索导论》，下文简称为“IR”），是最经典的信息检索书籍之一了。由于淞姐要求我细读这本书然后跟同事分享，就有了这个版块，之后会陆续添加后续章节内容。即使是站在巨人的肩膀上了（看了中文版和英文版IR，也从网上搜集了不少内容），但很多细节往往还是需要自己用心体会。从一个读者到一个讲解人，在第一次做分">
+<meta name="keywords" content="信息检索,布尔检索模型">
+<meta property="og:type" content="article">
+<meta property="og:title" content="布尔检索模型">
+<meta property="og:url" content="https://cheung.site/2017/10/06/boolean-retrieval/index.html">
+<meta property="og:site_name" content="工程师学徒">
+<meta property="og:description" content="最近在看《Introduction to Information Retrieval》（中文版为《信息检索导论》，下文简称为“IR”），是最经典的信息检索书籍之一了。由于淞姐要求我细读这本书然后跟同事分享，就有了这个版块，之后会陆续添加后续章节内容。即使是站在巨人的肩膀上了（看了中文版和英文版IR，也从网上搜集了不少内容），但很多细节往往还是需要自己用心体会。从一个读者到一个讲解人，在第一次做分">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-13T11:59:26.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="布尔检索模型">
+<meta name="twitter:description" content="最近在看《Introduction to Information Retrieval》（中文版为《信息检索导论》，下文简称为“IR”），是最经典的信息检索书籍之一了。由于淞姐要求我细读这本书然后跟同事分享，就有了这个版块，之后会陆续添加后续章节内容。即使是站在巨人的肩膀上了（看了中文版和英文版IR，也从网上搜集了不少内容），但很多细节往往还是需要自己用心体会。从一个读者到一个讲解人，在第一次做分">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="工程师学徒" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://cheung.site/2017/10/06/boolean-retrieval/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>布尔检索模型 | 工程师学徒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">工程师学徒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cheung.site/2017/10/06/boolean-retrieval/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="龚华昌">
+      <meta itemprop="description" content="<h6>每一个认真的技术人<br/>心底都有一个技术英雄梦</h6>">
+      <meta itemprop="image" content="/images/sanji.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="工程师学徒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">布尔检索模型
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-06 23:31:38" itemprop="dateCreated datePublished" datetime="2017-10-06T23:31:38+08:00">2017-10-06</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/信息检索/" itemprop="url" rel="index"><span itemprop="name">信息检索</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>最近在看《Introduction to Information Retrieval》（中文版为《信息检索导论》，下文简称为“IR”），是最经典的信息检索书籍之一了。由于淞姐要求我细读这本书然后跟同事分享，就有了这个版块，之后会陆续添加后续章节内容。即使是站在巨人的肩膀上了（看了中文版和英文版IR，也从网上搜集了不少内容），但很多细节往往还是需要自己用心体会。从一个读者到一个讲解人，在第一次做分享的时候已经感觉很不容易了，有些东西原来只是一知半解，能自己想清楚但却很难表述。这些内容就是个人的一些读书笔记，希望能给刚好想了解搜索引擎的你带来一些启发。文中会尽量备注英文原版中的术语以免丢失本意。英文电子书可以从官网获取 <a href="https://nlp.stanford.edu/IR-book/" target="_blank" rel="noopener">Introduction to Information Retrieval</a>。</p>
+</blockquote>
+<a id="more"></a>
+
+<h2 id="线性扫描和倒排索引"><a href="#线性扫描和倒排索引" class="headerlink" title="线性扫描和倒排索引"></a>线性扫描和倒排索引</h2><h3 id="从线性扫描讲起"><a href="#从线性扫描讲起" class="headerlink" title="从线性扫描讲起"></a>从线性扫描讲起</h3><p>如果需要从文档集合$D$中搜索包含某个关键词$k$的文档，最直接的方法就是从头到尾扫描文档集$D$，对每个文档$d_i$都查看是否包含关键词$k$。这种线性扫描的方式最为直观易懂，在Unix/Linux系统中的文本扫描命令grep做的就是这种工作。然而，当需要检索的文档规模非常大时，这种线性扫描的方式的效率会变得非常低下。线性扫描的时间复杂度与文档集大小成正比，在大规模文本检索的场景下，线性扫描不再适用。大型的Web搜索引擎需要检索千亿级别数量的网页，如果采用类似<code>grep</code>的线性扫描方式，就需要依次扫描这么多的文本来判断每一个网页是否符合查询要求，这样的检索慢如蜗牛，用户显然无法接受。目前，搜索引擎通过事先给文档建立索引（index）的方法来避免这种线性扫描，使得搜索过程非常快速，这种技术称为倒排索引。</p>
+<p>IR中，以《莎士比亚全集》为例子来说明倒排索引的基本知识。这里笔者就重新举个例子吧。假设某文档集中存在这样的三篇文档（还有其他文档不列举），分别是$d_1$为“Apple and cat”， $d_2$为“I like cat”，$d_3$为“I have an apple”，用矩阵表示，当文档$d$中存在词项$t$时，矩阵元素$(d, t)$为1，否则为0：</p>
+<table>
+<thead>
+<tr>
+<th>文档\词项</th>
+<th>apple</th>
+<th>and</th>
+<th>cat</th>
+<th>I</th>
+<th>like</th>
+<th>have</th>
+<th>an</th>
+<th>$…$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>$d_1$</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>$d_2$</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>$d_3$</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td><center>表1：文档-词项关联矩阵</center></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h3><p>使用类似<code>grep</code>命令的线性扫描方法的话，如需查询cat相关的文档，需要遍历所有文档（把每篇文档从头到尾扫描一遍），返回包含cat关键词的文档集。观察上面的矩阵表格，查询包含cat关键词的文档，其实只需要查看cat的那一列都有哪些元素大于0的文档就行。利用这种技巧，词项成为索引的基本单位，如果事先建立了类似上表(表1)的矩阵(或者其他形式的数据结构，如链表)，那么就可以快速地找到与查询的关键词相关的文档。我们把上面的矩阵转置一下，把词项(term)作为横坐标，文档(document)作为纵坐标，然后词项按照字母表排序，得到更直观的矩阵：</p>
+<table>
+<thead>
+<tr>
+<th>词项\文档</th>
+<th>$d_1$</th>
+<th>$d_2$</th>
+<th>$d_3$</th>
+<th>$…$</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>an</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>and</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>apple</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>cat</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>have</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>I</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>like</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+<td>$…$</td>
+</tr>
+<tr>
+<td><center>表2：词项-文档关联矩阵</center></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>对于上表(表2-词项-文档关联矩阵)，从行来看，可以表示词项在哪些文档中出现或者不出现；从列来看，可以得到每个文档都有哪些词项或者没有哪些词项。</p>
+<p>看到这里，倒排索引的概念已经呼之欲出了。不着急，我们先看看如何利用上面的表2来做搜索查询。布尔检索模型接受布尔表达式查询，用户可以通过使用AND，OR以及NOT等逻辑操作符来构建查询表达式。假如用户提交查询“cat AND NOT apple”（表示寻找带有cat但不含有apple的文档），我们从表2分别取出cat和apple对应的行向量，(110)和(101)，[更规范的写法应该是(1,1,0)和(1,0,1)，此处简写]，然后根据查询做对应的逻辑处理，如下：<br>(110) AND　NOT (101) = (110) AND (010) = (010)<br>结果向量(010)中第二个元素为1，表明该查询对应的结果是文档$d_2$。我们来确认一下，文档$d_2$的内容为“I like cat”，确实为查询所需。</p>
+<p>读者可能奇怪为什么这种基于位(bit)的逻辑操作可以得到正确的结果。我们举个简单的例子，如果另外一个用户提交了查询“cat AND apple”，我们需要从表2取出cat和apple对应的行向量。读者观察一下表2的那些行向量都是什么形式？cat的行向量(110)的第一位的1表示文档$d_1$包含词项cat，第二位的1表示文档$d_2$包含词项cat，第三位是0，表示文档$d_3$不包含词项cat。<strong>词项对应的行向量的第$i$位表明这个词项是否包含于第$i$个文档($d_i$)中！</strong>对于查询“cat AND apple”，需要返回同时包含cat和apple的文档。我们取出cat和apple对应的行向量，分别为(110)和(101)，根据“一个词项对应的行向量的第i位表明这个词项是否包含于第i个文档($d_i$)中”，词项cat和apple的行向量的第i位如果都是1表明$d_i$同时包含cat和apple，否则不同时包含cat和apple。因此cat和apple对应的行向量做AND操作可以获得同时包含cat和apple的文档都有哪些。(110) AND (101) = (100)，只有文档$d_1$符合查询要求。我们再看一个例子，对于查询“NOT apple”，需要返回不包含apple的文档。我们从表2取出apple对应的行向量(101)，我们已经知道对应位为1表示文档包含这个词项，那么，现在我们需要查询不包含这个词项的文档，当然就是取反了(NOT操作)。NOT (101) = (010)，结果(010)表示第一个和第三个文档都包含apple，只有第二个文档$d_2$不包含apple。至此，通过这几个简单的例子，读者应该能够理解这种布尔表达式查询的工作原理了。</p>
+<p>为了向倒排索引的概念平滑过渡，现在我们考虑一个更真实的场景(使用IR中的例子)。假如我们有100万篇文档(document)，每篇文档大约1000个词，那么，通常这些文档大概会有50万个不同的词项。此时，回头看看表2(词项-文档关联矩阵)，这个矩阵的规模会变得非常巨大，会有50万行(因为有50万的词汇量)和100万列(因为有100万篇文档)，元素数量为5000亿(50万×100万)，存放这张表需要的内存远远大于一台计算机内存的容量！此外，不难发现，这个50万×100万规模的矩阵，大部分元素都是0，可以从某一列来估算，文档$d_i$平均大约有1000个单词，但$d_i$那一列却有50万个元素(因为全局有50万的词汇量)。这么一算，这个词项-文档关联矩阵大约有99.8%的元素都为0。显然，只记录原始矩阵中1的位置的话，所需的存储空间会大大地减少，倒排索引(inverted index)正是起到这样的作用！</p>
+<p>我们观察表1和表2，表1以文档为基本考察要素，而表2以词项为基本考察要素，表2由原始的表1通过inverted(转置，引申为倒排)而来，这正是倒排这个概念的由来。在倒排索引中，我们只存储那些不为0的项。倒排索引的基本结构如下图：</p>
+<center>![倒排索引基本结构](/images/boolean-retrieval/structure-of-inverted-index.jpg)</center>
+
+<center>图1(IR图1-3)：倒排索引基本结构</center>
+
+<p>倒排索引带有一个词典(dictionary)，词典中的每个词项(term)都有对应的一个list，保存了这个词项在哪些文档中出现过。词项对应的list中的每一个元素我们称之为一个<strong>倒排记录(posting)</strong>，而把一个词项对应的整个list称为<strong>倒排表(posting list/inverted list)</strong>。所有词项的倒排表一起构成<strong>postings</strong>。[读者对于这几个定义不必太纠结，中文翻译过来感觉怪怪的]</p>
+<p>我们对上图中的倒排索引做一个基本说明。以图1中的倒排索引为例，词项Brutus指向的list称为Brutus的posting list，posting list中的每一个元素都称之为posting（如Brutus指向的1,2,4,11,31,45,173,174等，这些posting都是文档ID，表示Brutus在这些文档中出现）。之后我们将会看到，更实用的倒排索引的posting除了存储文档ID，还会保存词项在文档中出现的位置以及词项在该文档中出现的频率，这些都是后话了。</p>
+<h2 id="构建倒排索引"><a href="#构建倒排索引" class="headerlink" title="构建倒排索引"></a>构建倒排索引</h2><p>为获得由索引(indexing)带来的检索速度的提升，我们需要事先构建索引。<br>索引构建分为四个步骤：</p>
+<blockquote>
+<p>（1） Collect the documents to be indexed（<strong>收集构建索引的文档集</strong>，也就是我们检索系统需要检索的所有文档）<br>（2） Tokenize the text, turning each document into a list of tokens（<strong>把文本转化为token</strong>，就是把文本分割成一个一个的词，中文版的信息检索导论中将token译为词条）<br>（3） Do linguistic preprocessing, producing a list of normalized tokens, which<br>are the indexing terms（<strong>语言学预处理，利用词干还原(stemming)和词形归并(lemmatization)的方法，将token转为normalized token</strong>，例如将不同时态的单词转为其词根，将单复数名词统一转为单数形式，还原token的本来形式来获得统一的表示[注：更专业的说法叫“归一化”]，这些还原的token就是将要索引的词项(term)）<br>（4） Index the documents that each term occurs in by creating an inverted index,<br>consisting of a dictionary and postings（<strong>对文档中的词项构建倒排索引</strong>，最终倒排索引的形式可以参考图1）</p>
+</blockquote>
+<p>步骤1~3是索引构建的基础，我们做一个简要的说明。<br>步骤（1）中收集文档的工作，在Web搜索引擎中就是通过网络爬虫(<a href="https://en.wikipedia.org/wiki/Web_crawler" target="_blank" rel="noopener">web crawler</a>)来搜集分布于Web各处的网页。搜集的网页还不能直接用于后面的步骤中，还需要对网页文本做诸如去除标签，过滤广告等处理。<br>步骤（2）就是tokenization(词条化)，例如，对于英文文本而言，就是根据空格把单词一个一个地提取出来，把原始文本分割成token。当然了，如果只是这样简单的分割的话，会把“New York University”分成三个token了，因此英文也会存在短语划分问题。中文文本的话涉及的主要方法就是分词(word<br> segmentation)了，因为汉语字与字之间没有空格，并且由于文法的特殊性，词与词组的边界模糊，这让tokenization的问题更加复杂。中文分词技术属于自然语言处理的范畴，有兴趣的读者可以参考相关的专业文献。<br>步骤（3）就是将步骤（2）产生的token转为更加统一规范的词项(term),例如在文本中可能出现“apple”、“apples”、“Apple”这类token，但我们知道这几个token都是表达苹果(apple)的意思，因此，在构建索引的时候通常会把这几个token统一还原为“apple”，只为“apple”建立索引项，那么“apple”就是一个term(词项)了。倒排索引里面所有的term组成的集合我们称为词典(dictionary,也有称为词汇表(vocabulary)的)</p>
+<p>现在，假设前三步都已完成，原始的网页已经被我们分割成一个个的词项(term)。下面，我们体验一下构建基本的倒排索引的过程。</p>
+<p>给定一个文档集，给每个文档分配一个唯一的标识符(docID),通过步骤1~3，我们会得到很多的词项，用二元组的形式表示为(词项，文档ID)，表示词项在文档ID对应的文档中出现。布尔检索只考虑词项在文档中有没有出现，因此，即使一个词项在某个文档中多次出现，我们也只记录一个这样的(词项，文档ID)。建立倒排索引的图形化表示如下图2所示：</p>
+<center>![通过排序和合并构建索引的过程](/images/boolean-retrieval/construct-inverted-index.jpg)</center>
+
+<center>图2（IR图1-4）：通过排序和合并构建索引的过程</center>
+
+<p>图2中左边部分是由原始文档经过步骤1~3产生的(词项，文档ID)二元组；将这些二元组按照词项的字母顺序进行排序，就会把词项相同的二元组排在一起（图2中部）；最后，把同一词项的多个二元组合并在一起，这个词项出现的文档ID用list存放(也就是posting list)，并且<strong>根据文档ID排序</strong>。图中所示的倒排索引还存储了词项在文档中出现的次数(在同一个文档中多次出现算一次)。最终，我们形成了一个包含许多词项(term)的字典(dictionary)，每个词项都有一个倒排记录表(posting list)。</p>
+<p>至此，倒排索引已经建立好了，那么，如何利用这个倒排索引做布尔查询呢？</p>
+<h3 id="处理布尔查询"><a href="#处理布尔查询" class="headerlink" title="处理布尔查询"></a>处理布尔查询</h3><p>使用IR中的例子，查询为“Brutus AND Calpurnia”。我们分别从倒排索引表中取出词项Brutus和Calpurnia的posting list，然后对这两个词项的posting list求交集，即可得到查询需要输出的文档集合。如下图，</p>
+<center>![处理布尔查询时对两个倒排记录表求交集](/images/boolean-retrieval/sample-intersection-of-two-postings-lists.jpg)</center>
+
+<center>图3（IR图1-3）：处理布尔查询时对两个倒排记录表求交集</center>
+
+<p>然而，求交集这个操作的时间复杂度应该认真考量！一个显而易见的方法就是在外循环中遍历其中一个posting list，然后在内循环中对另外一个posting list的元素进行匹配查找。然而，这种求交集的方式需要的比较次数为$O(x<em>y)$，其中x、y分别是两个posting list的长度。考虑前面提到过的100万篇文档(document)，每篇文档大约1000个词，这些文档大概会有50万个不同的词项的例子，那么每个posting list的长度大约为2000（$100万×1000÷50万=2000$）。那么就需要做大约400万(2000×2000)次比较才能返回查询结果。在Web搜索引擎中，文档集规模比例子要大得多，查询需要的比较次数就更多了。那么，有没有更优的合并算法呢？<br>回忆我们构建倒排索引的时候，对posting list中的posting根据文档ID排序了，这个时候就可以派上用场了，下面的算法只需要$O(x</em>y)$次操作！</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 合并倒排记录表，p1, p2是根据docID排序的有序list，对p1和p2求交集（合并） */</span></span><br><span class="line">Intersect(p1, p2)</span><br><span class="line">    answer = &lt;&gt;  <span class="comment">// 初始化取交集的结果</span></span><br><span class="line">    <span class="keyword">while</span> p1 ≠ NIL <span class="keyword">and</span> p2 ≠ NIL  <span class="comment">// list不为空</span></span><br><span class="line">        <span class="keyword">if</span> docID(p1) == docID(p2)  <span class="comment">// 两个posting list遇到一样的docID</span></span><br><span class="line">            Add(answer, docID(p1))</span><br><span class="line">            p1 = p1.next</span><br><span class="line">            p2 = p2.next</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> docID(p1) &lt; docID(p2)  <span class="comment">// docID小的posting list的指针前移(p1的小)</span></span><br><span class="line">            p1 = p1.next</span><br><span class="line">        <span class="keyword">else</span>  <span class="comment">// docID小的posting list的指针前移(p2的小)</span></span><br><span class="line">            p2 = p2.next</span><br><span class="line">    <span class="keyword">return</span> answer</span><br></pre></td></tr></table></figure>
+
+<p>上面的伪代码是我根据IR书中的伪代码重写的，因为原书中的涉及if-else判断语句的代码缩进非常奇怪，附上原图：</p>
+<center>![Intersect](/images/boolean-retrieval/algorithm-intersection-of-two-postings-lists.jpg)</center>
+
+<center>图4（IR图1-6）：两个倒排记录表的合并算法</center>
+
+<p>要使用上述的合并posting list的算法，那么所有的posting list必须按照统一的标准进行排序。这里，我们使用的排序方法是根据全局统一的文档ID(docID)来对posting list排序。<br>对上述代码稍作修改就可以写出对p1,p2求并集的代码(最后需要把非空的list添加到answer中)。而对于NOT查询，只需要在结果中去掉相应的postings。</p>
+<h3 id="查询优化"><a href="#查询优化" class="headerlink" title="查询优化"></a>查询优化</h3><p>通过恰当地组织查询的处理过程可以进一步降低上述合并倒排记录表过程的比较次数。考虑查询：</p>
+<center>Brutus AND Caesar AND Calpurnia</center>
+
+<p>直接的想法是，我们依次取出Brutus，Caesar和Calpurnia的倒排记录表，然后先合并Brutus和Caesar得到一个中间结果tmp_answer（调用Intersect(Brutus.list, Caesar.list)），然后再把tmp_answer与Calpurnia合并得到最终结果（调用Intersect(tmp_answer, Calpurnia.list)）。<br>然而，一个启发式的算法可能取得更好的效果，降低比较次数。根据词项的文档频率（亦即泡排记录表的长度）从小到大依次进行处理。先合并两个最短的倒排记录表，那么所有中间结果的长度都不会超过最短的倒排记录表，最终需要的比较次数也就<strong>很可能最少</strong>。</p>
+<center>![Intersect](/images/boolean-retrieval/process-of-merging-sorted-postings-lists.jpg)</center>
+
+<center>图5（IR图1-7）：多查询词的查询优化-启发式算法</center>
+
+<p>这种启发式算法大部分情况下能取得很好的效果，但在某些情况下并不是最优的，最后，有兴趣的读者可以思考一下如何合并以下的三个倒排记录表才能最优（可见这种启发式算法并不一定能保证比较次数最少）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apple → [5,6,10]</span><br><span class="line">cat   → [3,5,6,10]</span><br><span class="line">luffy → [6,11,12,13,14]</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">本文结束<i class="fa fa-paw"></i>感谢您的阅读</div>
+    
+</div>
+      
+    </div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/信息检索/" rel="tag"><i class="fa fa-tag"></i> 信息检索</a>
+          
+            <a href="/tags/布尔检索模型/" rel="tag"><i class="fa fa-tag"></i> 布尔检索模型</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/30/insert-special-characters-into-mysql/" rel="next" title="Python向MySQL插入特殊字符相关错误的解决办法">
+                <i class="fa fa-chevron-left"></i> Python向MySQL插入特殊字符相关错误的解决办法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/09/create-a-blog-with-hexo/" rel="prev" title="使用Hexo搭建个人博客">
+                使用Hexo搭建个人博客 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/sanji.jpg" alt="龚华昌">
+            
+              <p class="site-author-name" itemprop="name">龚华昌</p>
+              <div class="site-description motion-element" itemprop="description"><h6>每一个认真的技术人<br>心底都有一个技术英雄梦</h6></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">42</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/wahcheung" title="GitHub &rarr; https://github.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="mailto:huachang.gong@outlook.com" title="E-Mail &rarr; mailto:huachang.gong@outlook.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://leetcode.com/wahcheung" title="LeetCode &rarr; https://leetcode.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-trophy"></i></a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#线性扫描和倒排索引"><span class="nav-number">1.</span> <span class="nav-text">线性扫描和倒排索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#从线性扫描讲起"><span class="nav-number">1.1.</span> <span class="nav-text">从线性扫描讲起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#倒排索引"><span class="nav-number">1.2.</span> <span class="nav-text">倒排索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构建倒排索引"><span class="nav-number">2.</span> <span class="nav-text">构建倒排索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#处理布尔查询"><span class="nav-number">2.1.</span> <span class="nav-text">处理布尔查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询优化"><span class="nav-number">2.2.</span> <span class="nav-text">查询优化</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">龚华昌</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: 'wahcheung.github.io',
+    owner: 'wahcheung',
+    admin: ['wahcheung'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+        // ref: https://github.com/ForbesLindesay/unescape-html
+        var unescapeHtml = function(html) {
+          return String(html)
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, '\'')
+            .replace(/&#x3A;/g, ':')
+            // replace all the other &#x; chars
+            .replace(/&#(\d+);/g, function (m, p) { return String.fromCharCode(p); })
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&');
+        };
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                content = unescapeHtml(content);
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
+<!-- 页面点击烟花特效 -->
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+  <script type="text/javascript" src="/js/anime.min.js"></script>
+  <script type="text/javascript" src="/js/fireworks.js"></script>
+

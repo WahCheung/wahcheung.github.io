@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=7.1.1">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/sanji.jpg?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-sanji.png?v=7.1.1">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-sanji.png?v=7.1.1">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=7.1.1" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.1.1',
+    sidebar: {"position":"left","display":"always","offset":12,"onmobile":false,"dimmer":false},
+    back2top: true,
+    back2top_sidebar: false,
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="层次聚类输出一个具有层次结构的簇集合，因此能够比扁平聚类输出的无结构簇集合提供更丰富的信息，代价是，层次聚类的时间复杂度至少是文档数目的平方级，较线性时间复杂度的K-均值算法和EM算法要差。">
+<meta name="keywords" content="聚类,信息检索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="层次聚类">
+<meta property="og:url" content="https://cheung.site/2018/01/30/hierarchical-clustering/index.html">
+<meta property="og:site_name" content="工程师学徒">
+<meta property="og:description" content="层次聚类输出一个具有层次结构的簇集合，因此能够比扁平聚类输出的无结构簇集合提供更丰富的信息，代价是，层次聚类的时间复杂度至少是文档数目的平方级，较线性时间复杂度的K-均值算法和EM算法要差。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-05-13T11:59:27.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="层次聚类">
+<meta name="twitter:description" content="层次聚类输出一个具有层次结构的簇集合，因此能够比扁平聚类输出的无结构簇集合提供更丰富的信息，代价是，层次聚类的时间复杂度至少是文档数目的平方级，较线性时间复杂度的K-均值算法和EM算法要差。">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="工程师学徒" type="application/atom+xml">
+
+
+
+  
+  
+  <link rel="canonical" href="https://cheung.site/2018/01/30/hierarchical-clustering/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>层次聚类 | 工程师学徒</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">工程师学徒</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cheung.site/2018/01/30/hierarchical-clustering/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="龚华昌">
+      <meta itemprop="description" content="<h6>每一个认真的技术人<br/>心底都有一个技术英雄梦</h6>">
+      <meta itemprop="image" content="/images/sanji.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="工程师学徒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">层次聚类
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-01-30 15:52:56" itemprop="dateCreated datePublished" datetime="2018-01-30T15:52:56+08:00">2018-01-30</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>层次聚类输出一个具有层次结构的簇集合，因此能够比扁平聚类输出的无结构簇集合提供更丰富的信息，代价是，层次聚类的时间复杂度至少是文档数目的平方级，较线性时间复杂度的K-均值算法和EM算法要差。</p>
+<a id="more"></a>
+
+<h3 id="凝聚式层次聚类"><a href="#凝聚式层次聚类" class="headerlink" title="凝聚式层次聚类"></a>凝聚式层次聚类</h3><p>层次聚类可以是自顶向下或自底向上的一个过程。自底向上的算法一开始将每篇文档都看成是一个簇，然后不断地对簇进行两两合并，直到所有文档都聚成一类为止。自底向上的聚类方法也因此被称为$HAC$。而自顶向下的方法则首先将所有文档看成一个簇，然后不断利用某种方法对簇进行分裂直到每篇文档都成为一个簇为止。在信息检索领域，自底向上的$HAC$方法更普遍。<br>合并策略：每次选取相似度最大的两个簇进行合并。不同的层次聚类方法的差异在于簇的相似度计算方法不同，因此也就具备不同的性质。<br>IR中介绍了四种层次聚类方法，分别是<strong>单连接聚类</strong>，<strong>全连接聚类</strong>，<strong>组平均聚类</strong>，<strong>质心聚类</strong>。
+层次聚类不需要事先指定簇的数目，但在一些应用中，我们希望聚类得到不想交的多个簇。此时，需要在聚类的层次结构中的某一点进行截断（停止聚类），常用截断方式有以下几种。</p>
+<ul>
+<li>在某个实现给定的相似度水平上进行截断。例如，当待结合的两个簇的结合相似度低于设定的阈值（如0.4）时，聚类终止。</li>
+<li>当两个连续的聚类结果的结合相似度之差最大时进行截断。这种策略相当于寻找聚类的拐点，较大的差值意味着多增加一个簇之后的聚类结果质量会显著下降。</li>
+<li>结构风险最小化。<br>$$K = \mathop{\arg\min}_{K’}[RSS(K’) + \lambda K’]$$<br>其中，$K’$指的是对层次结构进行截断后产生的结果簇的数目，$RSS$是残差平方和，而$\lambda$是每额外增加一个簇时的惩罚量。</li>
+<li>和扁平聚类一样，也可以事先指定结果簇的数目K，在产生K个簇时进行截断。</li>
+</ul>
+<h3 id="单连接聚类及全连接聚类算法"><a href="#单连接聚类及全连接聚类算法" class="headerlink" title="单连接聚类及全连接聚类算法"></a>单连接聚类及全连接聚类算法</h3><p>在单连接聚类（single-link clustering或single-linkage clustering）中，两个簇之间的相似度定<br>义为<strong>两个最相似的成员之间的相似度</strong>。这种单连接的合并准则是局部的，它仅仅关注两个簇互相邻近的区域，而不考虑簇中更远的区域和簇的总体结构。<br>在全连接聚类（complete-link clustering 或complete-linkage clustering）中，两个簇之间的相似度定义为<strong>两个最不相似的成员之间的相似度</strong>，这相当于选择两个簇进行聚类，使得合并结果具有最短路径。全连接聚类准则是非局部的，聚类结果中的整体结构信息会影响合并的结果。这种聚类实际上相当于优先考虑具有较短直径的紧凑簇，而不是具有长直径的松散簇，当然这种做法可能会对离群点较为敏感，比如某个远离中心的文档会显著增加候选簇的直径从而完全改变最后的聚类结果。</p>
+<h4 id="算法的图论解释"><a href="#算法的图论解释" class="headerlink" title="算法的图论解释"></a>算法的图论解释</h4><p>单连接和全连接聚类算法都可以用图论来解释。令$S_k$为第$k$步中两个簇合并后的结合相似度，$G(S_k)$为任意两点间相似度不低于$S_k$的点的连接图。对于单连接聚类，第$k$步后得到的簇其实是$G(S_k)$的连通分支；而采用全连接聚类在第$k$步后得到的簇则构成$G(S_k)$的最大团。上述基于图论的解释方法也是单连接和全连接聚类方法得名的由来。单连接方法中第k步的所谓单连接簇指的是这样一些点的集合：它们当中至少存在两个点之间的相似度满足$ \geq s_k$；而全连接方法中第$k$步的簇中所有点之间的相似度均满足$s \geq s_k$。</p>
+<h3 id="组平均凝聚式聚类"><a href="#组平均凝聚式聚类" class="headerlink" title="组平均凝聚式聚类"></a>组平均凝聚式聚类</h3><p>GAAC（Group-average Agglomerative Clustering，组平均凝聚式聚类）通过计算所有文档($w_i \cup w_j$)之间的相似度来对簇的质量进行计算，因此可以避免在单连接和全连接准则中只计算一对文档相似度的缺陷。组平均聚类计算所有文档之间相似度的平均值，其中<strong>包括来自同一簇的文档</strong>，但不使用自相似度（文档与文档自身的相似度）。因此，簇$\omega_i$和$\omega_j$的组平均相似度($\verb|SIM-GA|$)计算公式如下：</p>
+<p>$$\verb|SIM-GA|(\omega_i, \omega_j) = \frac{1}{(N_i+N_j)(N_i+N_j-1)}\sum_{d_m \in \omega_i\cup\omega_j},\sum_{d_n \in \omega_i\cup\omega_j, 且d_n \neq d_m} \vec d_m \cdot \vec d_n \tag{1}$$</p>
+<p>其中，$\vec d$是文档$d$的长度归一化向量，$\cdot$是内积运算符，$N_i$和$N_j$分别是$\omega_i$和$\omega_j$中的文档数目。</p>
+<p>组平均聚类的动机是要选择两个整体上一致性较高的簇进行合并。这个一致性，通过合并的簇$\omega_k=\omega_i\cup\omega_j$中两两文档之间相似度的均值来评估。</p>
+<p>由于组平均聚类需要计算任意两个文档之间的相似度，其时间复杂度是$\Theta(N_i N_j)$。这个计算在某些条件下可以得到优化：当文档用单位向量表示(归一化)，并且相似度采用余弦相似度时，向量相似度之和等于向量和的相似度：</p>
+<p>$$\sum_{d_m \in \omega_i},\sum_{d_n \in \omega_j}(\vec d_m \cdot \vec d_n) = \left(\sum_{d_m \in \omega_i} \vec d_m\right)\cdot\left(\sum_{d_n \in \omega_j} \vec d_n\right) \tag{2}$$</p>
+<p>于是，有</p>
+<p>$$\verb|SIM-GA|(\omega_i, \omega_j) = \frac{1}{(N_i+N_j)(N_i+N_j-1)}\left[\left(\sum_{d_m \in \omega_i\cup\omega_j}\vec d_m\right)^2 - (N_i+N_j)\right] \tag{3}$$</p>
+<p>其中，式子右边的$(N_i+N_j)$是$N_i+N_j$个值为1的自相似度之和。假设两个向量和$\sum_{d_m \in \omega_i}\vec d_m$及$\sum_{d_n \in \omega_j}\vec d_n$已知，利用上述技巧可以在常数时间而不是$\Theta(N_i N_j)$内计算两个簇的相似度。而计算两个向量和$\sum_{d_m \in \omega_i}\vec d_m$及$\sum_{d_n \in \omega_j}\vec d_n$的时间复杂度是$\Theta(N_i+N_j)$</p>
+<h4 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h4><p>关于上面说到的“当文档用单位向量表示(归一化)，并且相似度采用余弦相似度时，向量相似度之和等于向量和的相似度”，这个性质(即公式2)是由于单位向量的内积计算满足加法分配律。下面给出公式2的证明过程。<br>假设每篇文档有两个特征，用$x$和$y$表示，文档$d_m$的归一化表示为$(x_m, y_m)$。文档$d_m$和文档$d_n$的余弦相似度为</p>
+<p>$$sim(d_m,d_n) = \frac{\vec d_m \cdot \vec d_n}{|\vec d_m||\vec d_n|} = \vec d_m \cdot \vec d_n = (x_m, y_m)\cdot(x_n, y_n) = x_mx_n+y_my_n$$</p>
+<p>对于只有一篇文档($d_0$)的簇$w_j$，它与包含$N$篇文档的簇$w_i={d_1,d_2,\cdots,d_{N}}$的<strong>相似度的和</strong>为（根据定义，即$d_0$与$w_i$中所有文档的相似度的和）：<br>$$<br>\begin{align}<br>Sum(sim) &amp;= \sum_{d_n \in w_i} \vec d_0 \cdot \vec d_n \<br>    &amp;= \sum_{1\leq n \leq N} (x_0, y_0)\cdot(x_n, y_n) \<br>    &amp;= \sum_{1\leq n \leq N} (x_0x_n+y_0y_n) \<br>    &amp;= \left(x_0\sum_{1\leq n \leq N}x_n + y_0\sum_{1\leq n \leq N}y_n \right) \<br>    &amp;= \left(\vec d_0 \sum_{d_n \in w_i} \vec d_n\right)<br>\end{align}<br>$$</p>
+<p>即：</p>
+<p>$$\sum_{d_n \in w_i} \vec d_0 \cdot \vec d_n = \left(\vec d_0 \sum_{d_n \in w_i} \vec d_n\right) \tag{*}$$</p>
+<p>若簇$w_i$包含多篇文档$(d_{1},d_{2},\cdots,d_{M})$，根据定义，计算簇$w_i$与簇$w_j$的<strong>相似度的和</strong>(包含$MN$个文档相似度，$M,N$分别是簇$w_i$与簇$w_j$的文档数目)：</p>
+<p>$$<br>\begin{align}<br>Sum(sim)<br>&amp;= \sum_{d_m \in w_i}\sum_{d_n \in w_j}(\vec d_m \cdot \vec d_n) \<br>&amp;= \left[\left(\vec d_{1} \sum_{d_n \in w_j} \vec d_n\right) + \left(\vec d_{2} \sum_{d_n \in w_j} \vec d_n\right) + \cdots + \left(\vec d_{M} \sum_{d_n \in w_j} \vec d_n\right)\right] \tag{**}
+\end{align}<br>$$</p>
+<p>上式记为[**]。<br>$\sum_{d_n \in w_j} \vec d_n$也是一个向量，记为$\vec d_s$，代入[**]：[注：下式推导的第二到第三行利用了公式[*]]</p>
+<p>$$<br>\begin{align}<br>Sum(sim) &amp;= (\vec d_{1} \vec d_s + \vec d_{2} \vec d_s + \cdots + \vec d_{M} \vec d_s) \<br>    &amp;= \sum_{d_m \in w_i} (\vec d_m \cdot \vec d_s) \<br>    &amp;= \vec d_s \sum_{d_m \in w_i} \vec d_m \<br>    &amp;= \left(\sum_{d_n \in \omega_j} \vec d_n\right)\cdot\left(\sum_{d_m \in \omega_i} \vec d_m\right)<br>\end{align}<br>$$</p>
+<p>$Sum(sim)$是向量相似度之和，上面等式右边即是向量和的相似度。即，<strong>向量相似度之和等于向量和的相似度</strong>，得证。</p>
+<h3 id="质心聚类"><a href="#质心聚类" class="headerlink" title="质心聚类"></a>质心聚类</h3><p>在质心聚类中，将通过两个簇的质心相似度来定义这两个簇的相似度：</p>
+<p>$$<br>\begin{align}<br>\verb|SIM-CENT|(w_i,w_j)<br>&amp;= \vec\mu(w_i) \cdot \vec\mu(w_j) \tag{5} \<br>&amp;= \left(\frac{1}{N_i} \sum_{d_m \in \omega_i} \vec d_m\right)\cdot\left(\frac{1}{N_j} \sum_{d_n \in \omega_j} \vec d_n\right) \<br>&amp;= \frac{1}{N_iN_j}\sum_{d_m \in w_i}\sum_{d_n \in w_j}(\vec d_m \cdot \vec d_n) \tag{6}<br>\end{align}<br>$$</p>
+<p>公式(5)就是质心相似度。公式(6)则表明质心相似度等价于不同簇文档之间的平均相似度。注意与组平均聚类的区别。<br>与其他三种HAC算法相比，质心聚类方法不是单调的，可能会发生相似度的颠倒现象，也就是说聚类过程中相似度值有可能会下降。</p>
+<h3 id="层次聚类的最优性"><a href="#层次聚类的最优性" class="headerlink" title="层次聚类的最优性"></a>层次聚类的最优性</h3>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">本文结束<i class="fa fa-paw"></i>感谢您的阅读</div>
+    
+</div>
+      
+    </div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/聚类/" rel="tag"><i class="fa fa-tag"></i> 聚类</a>
+          
+            <a href="/tags/信息检索/" rel="tag"><i class="fa fa-tag"></i> 信息检索</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/06/wikipedia/" rel="next" title="中文维基百科语料处理">
+                <i class="fa fa-chevron-left"></i> 中文维基百科语料处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/08/connect-spark-to-mysql/" rel="prev" title="Spark连接MySQL数据库">
+                Spark连接MySQL数据库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/sanji.jpg" alt="龚华昌">
+            
+              <p class="site-author-name" itemprop="name">龚华昌</p>
+              <div class="site-description motion-element" itemprop="description"><h6>每一个认真的技术人<br>心底都有一个技术英雄梦</h6></div>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                      <a href="/categories/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                      <a href="/tags/">
+                    
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">42</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/wahcheung" title="GitHub &rarr; https://github.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="mailto:huachang.gong@outlook.com" title="E-Mail &rarr; mailto:huachang.gong@outlook.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i></a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  
+                  
+                  
+                    
+                  
+                  <a href="https://leetcode.com/wahcheung" title="LeetCode &rarr; https://leetcode.com/wahcheung" rel="noopener" target="_blank"><i class="fa fa-fw fa-trophy"></i></a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#凝聚式层次聚类"><span class="nav-number">1.</span> <span class="nav-text">凝聚式层次聚类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单连接聚类及全连接聚类算法"><span class="nav-number">2.</span> <span class="nav-text">单连接聚类及全连接聚类算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#算法的图论解释"><span class="nav-number">2.1.</span> <span class="nav-text">算法的图论解释</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组平均凝聚式聚类"><span class="nav-number">3.</span> <span class="nav-text">组平均凝聚式聚类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#补充说明"><span class="nav-number">3.1.</span> <span class="nav-text">补充说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#质心聚类"><span class="nav-number">4.</span> <span class="nav-text">质心聚类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#层次聚类的最优性"><span class="nav-number">5.</span> <span class="nav-text">层次聚类的最优性</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+  
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">龚华昌</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/utils.js?v=7.1.1"></script>
+
+  <script src="/js/motion.js?v=7.1.1"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/affix.js?v=7.1.1"></script>
+
+  <script src="/js/schemes/pisces.js?v=7.1.1"></script>
+
+
+
+
+  
+  <script src="/js/scrollspy.js?v=7.1.1"></script>
+<script src="/js/post-details.js?v=7.1.1"></script>
+
+
+
+  
+
+
+  <script src="/js/next-boot.js?v=7.1.1"></script>
+
+
+  
+
+  
+
+  
+
+  
+
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: 'wahcheung.github.io',
+    owner: 'wahcheung',
+    admin: ['wahcheung'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
+
+
+  
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+        // ref: https://github.com/ForbesLindesay/unescape-html
+        var unescapeHtml = function(html) {
+          return String(html)
+            .replace(/&quot;/g, '"')
+            .replace(/&#39;/g, '\'')
+            .replace(/&#x3A;/g, ':')
+            // replace all the other &#x; chars
+            .replace(/&#(\d+);/g, function (m, p) { return String.fromCharCode(p); })
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&amp;/g, '&');
+        };
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                content = unescapeHtml(content);
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+  
+    
+      <script type="text/x-mathjax-config">
+  
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') { next = next.nextSibling }
+        if (next && next.nodeName.toLowerCase() === 'br') { next.parentNode.removeChild(next) }
+      }
+    });
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      document.getElementById(all[i].inputID + '-Frame').parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<script src="//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+    
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
+<!-- 页面点击烟花特效 -->
+
+  <canvas class="fireworks" style="position: fixed;left: 0;top: 0;z-index: 1; pointer-events: none;"></canvas>
+  <script type="text/javascript" src="/js/anime.min.js"></script>
+  <script type="text/javascript" src="/js/fireworks.js"></script>
+
