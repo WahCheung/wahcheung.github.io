@@ -111,10 +111,15 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="Windows 10出现了一类称为WSL(Windows Subsystem for Linux)的应用，使得Windows 10能够通过极其简单的方式安装并运行Linux发行版。详情查看微软官网对此的介绍Windows Subsystem for Linux Documentation">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:26.000Z">
+<meta property="og:image" content="https://cheung.site/images/linux-on-windows/enable-windows-subsystem-linux.png">
+<meta property="og:image" content="https://cheung.site/images/linux-on-windows/powershell-enable-windows-subsystem-linux.png">
+<meta property="og:image" content="https://cheung.site/images/linux-on-windows/store-wsl.png">
+<meta property="og:image" content="https://cheung.site/images/linux-on-windows/store-ubuntu.png">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.105Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在Windows 10上运行Linux子系统">
 <meta name="twitter:description" content="Windows 10出现了一类称为WSL(Windows Subsystem for Linux)的应用，使得Windows 10能够通过极其简单的方式安装并运行Linux发行版。详情查看微软官网对此的介绍Windows Subsystem for Linux Documentation">
+<meta name="twitter:image" content="https://cheung.site/images/linux-on-windows/enable-windows-subsystem-linux.png">
 
 
 
@@ -464,21 +469,17 @@
 <a id="more"></a>
 
 <h3 id="启用“适用于Linux的Windows子系统”功能"><a href="#启用“适用于Linux的Windows子系统”功能" class="headerlink" title="启用“适用于Linux的Windows子系统”功能"></a>启用“适用于Linux的Windows子系统”功能</h3><p>打开Windows功能面板-&gt;启用或关闭Windows功能:<br>启用“适用于Linux的Windows子系统”：</p>
-<center>![启用或关闭Windows功能](/images/linux-on-windows/enable-windows-subsystem-linux.png)</center>
-
+<p><img src="/images/linux-on-windows/enable-windows-subsystem-linux.png" alt="启用或关闭Windows功能"></p>
 <p>或者管理员权限打开PowerShell执行以下命令以启用“适用于Linux的Windows子系统”功能(<code>&gt;</code>为命令提示符，无需输入):</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux</span><br></pre></td></tr></table></figure>
 
-<center>![Microsoft-Windows-Subsystem-Linux](/images/linux-on-windows/powershell-enable-windows-subsystem-linux.png)</center>
-
+<p><img src="/images/linux-on-windows/powershell-enable-windows-subsystem-linux.png" alt="Microsoft-Windows-Subsystem-Linux"></p>
 <p>启用功能后重启系统让改动生效。若未启用此功能，打开ubuntu会提示以下错误:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Installing, this may take a few minutes...</span><br><span class="line">WslRegisterDistribution failed with error: 0x8007019e</span><br><span class="line">The Windows Subsystem <span class="keyword">for</span> Linux optional component is not enabled. Please <span class="built_in">enable</span> it and try again.</span><br><span class="line">See https://aka.ms/wslinstall <span class="keyword">for</span> details.</span><br><span class="line">Press any key to <span class="built_in">continue</span>...</span><br></pre></td></tr></table></figure>
 
 <h3 id="使用Windows应用商店安装Ubuntu"><a href="#使用Windows应用商店安装Ubuntu" class="headerlink" title="使用Windows应用商店安装Ubuntu"></a>使用Windows应用商店安装Ubuntu</h3><p>在Windows 10应用商店搜索<em>ubuntu</em>或者<em>linux</em>，选择安装ubuntu。安装完成后点击图标启动，就会进入控制台窗口，会提示新建用户并输入密码:</p>
-<center>![Windows应用商店WSL](/images/linux-on-windows/store-wsl.png)</center>
-
-<center>![Windows应用商店Ubuntu](/images/linux-on-windows/store-ubuntu.png)</center>
-
+<p><img src="/images/linux-on-windows/store-wsl.png" alt="Windows应用商店WSL"></p>
+<p><img src="/images/linux-on-windows/store-ubuntu.png" alt="Windows应用商店Ubuntu"></p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Installing, this may take a few minutes...</span><br><span class="line">Please create a default UNIX user account. The username does not need to match your Windows username.</span><br><span class="line">For more information visit: https://aka.ms/wslusers</span><br><span class="line">Enter new UNIX username: cheung</span><br><span class="line">Enter new UNIX password:</span><br><span class="line">Retype new UNIX password:</span><br><span class="line">passwd: password updated successfully</span><br><span class="line">Installation successful!</span><br><span class="line">To run a <span class="built_in">command</span> as administrator (user <span class="string">"root"</span>), use <span class="string">"sudo &lt;command&gt;"</span>.</span><br><span class="line">See <span class="string">"man sudo_root"</span> <span class="keyword">for</span> details.</span><br><span class="line"></span><br><span class="line">cheung@thinkpad-cheung:~$</span><br></pre></td></tr></table></figure>
 
 <p>在Windows中的任意一个命令行窗口输入<code>ubuntu</code>都可以进入ubuntu子系统。<br>后来，某次开机之后尝试进入ubuntu子系统，提示<code>WslRegisterDistribution failed with error: 0x800703fa</code>错误，这个问题在微软的GitHub上有对应的issue，见 <a href="https://github.com/Microsoft/WSL/issues/2576" target="_blank" rel="noopener">Error: 0x800703fa - Press any key to continue</a>。我在使用管理员打开Ubuntu之后就正常了，之后不需要管理员权限打开也没有问题。此外，重启也可以解决这个问题。</p>
@@ -618,7 +619,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -768,7 +769,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

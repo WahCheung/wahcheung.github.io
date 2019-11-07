@@ -111,10 +111,12 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="聚类是无监督学习（unsupervised learning）的一种最普遍的形式。通过比较聚类算法得到的聚类结果与人工判定的标准分类结果的吻合程度，可以评价一个聚类算法的好坏。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:27.000Z">
+<meta property="og:image" content="https://cheung.site/images/evaluation-of-clustering/clustering-example.png">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.101Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="聚类算法的评价指标">
 <meta name="twitter:description" content="聚类是无监督学习（unsupervised learning）的一种最普遍的形式。通过比较聚类算法得到的聚类结果与人工判定的标准分类结果的吻合程度，可以评价一个聚类算法的好坏。">
+<meta name="twitter:image" content="https://cheung.site/images/evaluation-of-clustering/clustering-example.png">
 
 
 
@@ -464,8 +466,7 @@
 <h3 id="纯度"><a href="#纯度" class="headerlink" title="纯度"></a>纯度</h3><p>纯度是聚类效果最简单的评价指标之一。<br>计算纯度时，每个簇被分配给该簇当中出现数目最多的文档所在的类别，然后可以通过正确分配的文档数除以文档集中的文档总数$N$来得到该分配的精度。形式地有</p>
 <p>$$purity(\Omega,C) = \frac{1}{N}\sum_k\max_j|\omega_k \cap c_j|$$</p>
 <p>其中，$\Omega = {\omega_1,\omega_2,\cdots,\omega_K}$是聚类结果，$C = {c_1,c_2,\cdots,c_J}$是类别集合。每个$w_k$和$c_j$都是指一些样本组成的集合。</p>
-<center>![聚类结果](/images/evaluation-of-clustering/clustering-example.png)</center>
-
+<p><img src="/images/evaluation-of-clustering/clustering-example.png" alt="聚类结果"></p>
 <p>如图，每个簇的样本数分别为：$|w_1| = 6$，$|w_2| = 6$，$|w_3| = 5$，总样本数$N = 17$。每个簇所对应的主类以及这个主类对应的样本数分别是：簇1-三角形-5，簇2-圆形-4，簇3-正方形-3。<br>纯度为</p>
 <p>$$purity = \frac{1}{17}(5+4+3) = \frac{12}{17}$$</p>
 <h3 id="归一化互信息"><a href="#归一化互信息" class="headerlink" title="归一化互信息"></a>归一化互信息</h3><p>NMI（Normalized Mutual Information，归一化互信息）是一种能在聚类质量和簇数目之间维持均衡的指标。定义如下</p>
@@ -607,7 +608,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -757,7 +758,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

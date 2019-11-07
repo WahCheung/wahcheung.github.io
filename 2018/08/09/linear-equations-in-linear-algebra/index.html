@@ -111,10 +111,22 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="看机器学习方面的书看到复杂的数学公式往往望而生畏，要深入机器学习，数学基础还是很重要的。《Linear Algebra and Its Applications》是我读本科时的线性代数教材，已经不记得是第几遍读这本书了，知识总是忘得很快，大概是没有深入去思考，也缺少总结吧。这篇文章大部分都是从书中(有的以图片的形式)摘录的内容，也有一点自己的说明和启发，作为日后温故知新的笔记。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:26.000Z">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-elementary-row-operations.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-example-of-linear-equations.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-example-of-linear-combinations-part1.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-example-of-linear-combinations-part2.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-vector-equation-and-augmented-matrix.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-definition-of-spanned-set.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-definition-of-product-of-matrix-and-vector.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-theorem3-relation-between-matrix-equation-vector-equation-and-linear-equations.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-example-computation-of-Ax.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-solution-computation-of-Ax.png">
+<meta property="og:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-fast-computation-of-Ax.png">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.105Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线性方程组与向量方程、矩阵方程的联系">
 <meta name="twitter:description" content="看机器学习方面的书看到复杂的数学公式往往望而生畏，要深入机器学习，数学基础还是很重要的。《Linear Algebra and Its Applications》是我读本科时的线性代数教材，已经不记得是第几遍读这本书了，知识总是忘得很快，大概是没有深入去思考，也缺少总结吧。这篇文章大部分都是从书中(有的以图片的形式)摘录的内容，也有一点自己的说明和启发，作为日后温故知新的笔记。">
+<meta name="twitter:image" content="https://cheung.site/images/linear-equations-in-linear-algebra/ch01-elementary-row-operations.png">
 
 
 
@@ -468,42 +480,31 @@
 <p><em>“to replace one system with an equivalent system(i.e., one with the same solution set) that is easier to solve.”</em></p>
 </blockquote>
 <p>有三种基本的行变换(Elementary Row Operation, 基本行变换)可以用于简化线性方程组，如下(Replacement, Interchange, Scaling):</p>
-<center>![elementary row operations](/images/linear-equations-in-linear-algebra/ch01-elementary-row-operations.png)</center>
-
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-elementary-row-operations.png" alt="elementary row operations"></p>
 <p>显然，上面三种行变换每一种都是可逆的。如果矩阵A可以通过一系列的基本行变换转为矩阵$B$(由于基本行变换可逆，$B$也可以变换得到$A$)，那么我们称$A$和$B$是行等价的(row equivalent)。<br>此外，对于一个线性方程组(以及它对应的增广矩阵)，<strong>基本行变换不改变原方程组的解</strong>，这一性质是使用基本行变换解线性方程组的根基，明白这一点至关重要！</p>
-<center>![elementary row-operations do not change the solution](/images/linear-equations-in-linear-algebra/ch01-example-of-linear-equations.png)</center>
-
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-example-of-linear-equations.png" alt="elementary row-operations do not change the solution"></p>
 <p>通过上面的方程组(称这个方程组为$A$)思考一下: 如果$A$通过其中一种基本行变换转为$B$，分别考察三种基本行变换，可以看到，方程组A的任意解必然是方程组$B$的解($A$的解代入方程组$B$必然满足)。反过来，$B$通过刚才$A$使用的基本行变换的逆变换(这还是一个基本行变换)也可以得到$A$，即$B$通过基本行变换可以转为$A$，因此$B$的任意解必然也是方程组A的解。我们得到结论:</p>
 <blockquote>
 <p>如果两个线性方程组的增广矩阵是行等价的(即可以通过一系列的基本行变换互相转换)，那么这两个方程组有同样的解。</p>
 </blockquote>
 <p>那么，我们只要不断地通过基本行变换把增广矩阵转换成更简单的形式，就会让方程的解更加显而易见。当转换成简化阶梯型矩阵时，方程的解就一目了然了。</p>
-<h3 id="向量的线性组合"><a href="#向量的线性组合" class="headerlink" title="向量的线性组合"></a>向量的线性组合</h3><center>![example of linear combinations](/images/linear-equations-in-linear-algebra/ch01-example-of-linear-combinations-part1.png)</center>
-
-<center>![example of linear combinations](/images/linear-equations-in-linear-algebra/ch01-example-of-linear-combinations-part2.png)</center>
-
+<h3 id="向量的线性组合"><a href="#向量的线性组合" class="headerlink" title="向量的线性组合"></a>向量的线性组合</h3><p><img src="/images/linear-equations-in-linear-algebra/ch01-example-of-linear-combinations-part1.png" alt="example of linear combinations"></p>
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-example-of-linear-combinations-part2.png" alt="example of linear combinations"></p>
 <p>通过一个求解一个向量是否是另外两个已知向量的线性组合的例子，我们发现这实际上就是求解线性方程组，且其增广矩阵由这些向量组成:</p>
-<center>![vector equation and augmented matrix](/images/linear-equations-in-linear-algebra/ch01-vector-equation-and-augmented-matrix.png)</center>
-
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-vector-equation-and-augmented-matrix.png" alt="vector equation and augmented matrix"></p>
 <p>至此，我们知道，<strong>求解线性方程组的解也就是求解增广矩阵最后一个column与其他column之间的线性组合关系。</strong></p>
 <p>对于向量的线性组合还有以下定义:</p>
-<center>![definition of spanned set](/images/linear-equations-in-linear-algebra/ch01-definition-of-spanned-set.png)</center>
-
-<h3 id="矩阵与向量相乘-Ax-的定义"><a href="#矩阵与向量相乘-Ax-的定义" class="headerlink" title="矩阵与向量相乘$Ax$的定义"></a>矩阵与向量相乘$Ax$的定义</h3><center>![definition of Ax](/images/linear-equations-in-linear-algebra/ch01-definition-of-product-of-matrix-and-vector.png)</center>
-
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-definition-of-spanned-set.png" alt="definition of spanned set"></p>
+<h3 id="矩阵与向量相乘-Ax-的定义"><a href="#矩阵与向量相乘-Ax-的定义" class="headerlink" title="矩阵与向量相乘$Ax$的定义"></a>矩阵与向量相乘$Ax$的定义</h3><p><img src="/images/linear-equations-in-linear-algebra/ch01-definition-of-product-of-matrix-and-vector.png" alt="definition of Ax"></p>
 <p>这个定义直接将向量线性组合与矩阵(×向量)乘积联系在一起了，由这个定义直接得知，<em>$Ax=b$有解当且仅当$b$是$A$的列向量的线性组合</em>。
 另一方面，联系这个定义和上面提到的<strong>求解线性方程组也就是求解增广矩阵最后一个column与其他column之间的线性组合关系</strong>，我们立即可以得到下面的定理：</p>
-<center>![theorem3 relation between matrix equation, vector equation and linear equations](/images/linear-equations-in-linear-algebra/ch01-theorem3-relation-between-matrix-equation-vector-equation-and-linear-equations.png)</center>
-
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-theorem3-relation-between-matrix-equation-vector-equation-and-linear-equations.png" alt="theorem3 relation between matrix equation, vector equation and linear equations"></p>
 <p>这个定理将线性方程组、向量方程和矩阵方程这三个方面联系起来了，感觉是一个伟大的壮举。</p>
 <h3 id="Ax-的计算"><a href="#Ax-的计算" class="headerlink" title="$Ax$的计算"></a>$Ax$的计算</h3><p>不少线性代数的教材开篇就直接写$Ax$怎么计算，但我们却看得一头雾水，不知道为什么是这样计算的，这样计算的来源依据是什么。<br>上一节我们定义了矩阵$A$与向量$x$相乘的含义，就是$A$的列向量依次以$x$的各个元素为权重的线性组合。这就是我们计算$Ax$的原始依据，看下面的例子：</p>
-<center>![example computation of Ax](/images/linear-equations-in-linear-algebra/ch01-example-computation-of-Ax.png)</center>
-
-<center>![computation of Ax](/images/linear-equations-in-linear-algebra/ch01-solution-computation-of-Ax.png)</center>
-
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-example-computation-of-Ax.png" alt="example computation of Ax"></p>
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-solution-computation-of-Ax.png" alt="computation of Ax"></p>
 <p>观察上面的计算结果，发现有下面的规律：</p>
-<center>![TODO](/images/linear-equations-in-linear-algebra/ch01-fast-computation-of-Ax.png)</center>
-
+<p><img src="/images/linear-equations-in-linear-algebra/ch01-fast-computation-of-Ax.png" alt="TODO"></p>
 <p>这就是我们手算$Ax$时使用的方法！</p>
 
       
@@ -638,7 +639,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -788,7 +789,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

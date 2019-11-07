@@ -111,10 +111,13 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="Tiny HTTPd项目地址: Tiny HTTPd作者J. David Blackstone对这个项目的Summary如下:  tinyhttpd is a relatively simple webserver I wrote for a school project. While exceedingly simple, tinyhttpd is threaded and handles ba">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:28.000Z">
+<meta property="og:image" content="https://cheung.site/images/tiny-httpd-annotation/httpd-client-index.png">
+<meta property="og:image" content="https://cheung.site/images/tiny-httpd-annotation/httpd-client-webpage-color.png">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tinyhttpd源码阅读">
 <meta name="twitter:description" content="Tiny HTTPd项目地址: Tiny HTTPd作者J. David Blackstone对这个项目的Summary如下:  tinyhttpd is a relatively simple webserver I wrote for a school project. While exceedingly simple, tinyhttpd is threaded and handles ba">
+<meta name="twitter:image" content="https://cheung.site/images/tiny-httpd-annotation/httpd-client-index.png">
 
 
 
@@ -490,10 +493,8 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./httpd</span><br></pre></td></tr></table></figure>
 
 <p>程序会在命令行打印随机获得的http端口(port)，在浏览器打开<code>ip:port</code>就可以打开一个简单的网页。这个网页有一个输入框，输入一个颜色(例如purple/blue/yellow/pink)，可以跳转到指定颜色的网页(ip:port/color.cgi)。如下图(输入purple):</p>
-<center>![打开网页ip:port](/images/tiny-httpd-annotation/httpd-client-index.png)</center>
-
-<center>![cgi程序返回结果](/images/tiny-httpd-annotation/httpd-client-webpage-color.png)</center>
-
+<p><img src="/images/tiny-httpd-annotation/httpd-client-index.png" alt="打开网页ip:port"></p>
+<p><img src="/images/tiny-httpd-annotation/httpd-client-webpage-color.png" alt="cgi程序返回结果"></p>
 <p>如果在输入一个颜色之后，跳转的网页是空的，这是由于脚本指定的perl解析器的路径有问题。打开htdoc目录下的<code>check.cgi</code>和<code>color.cgi</code>，可以看到第一行都是</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/local/bin/perl -Tw</span></span><br></pre></td></tr></table></figure>
 
@@ -638,7 +639,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -788,7 +789,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

@@ -103,17 +103,18 @@
 
 
 
-  <meta name="description" content="每一个认真的技术人心底都有一个技术英雄梦">
-<meta property="og:type" content="website">
-<meta property="og:title" content="分类">
-<meta property="og:url" content="https://cheung.site/categories/index.html">
+  <meta name="description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。  Samba安装12$ sudo apt-get update$ sudo apt-get install samba  Samba用户在Linux主机上单独开设一个系统用户(share)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远">
+<meta name="keywords" content="Samba">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Samba文件共享">
+<meta property="og:url" content="https://cheung.site/2019/09/19/samba-service/index.html">
 <meta property="og:site_name" content="工程师学徒">
-<meta property="og:description" content="每一个认真的技术人心底都有一个技术英雄梦">
+<meta property="og:description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。  Samba安装12$ sudo apt-get update$ sudo apt-get install samba  Samba用户在Linux主机上单独开设一个系统用户(share)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:06.000Z">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.109Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分类">
-<meta name="twitter:description" content="每一个认真的技术人心底都有一个技术英雄梦">
+<meta name="twitter:title" content="Samba文件共享">
+<meta name="twitter:description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。  Samba安装12$ sudo apt-get update$ sudo apt-get install samba  Samba用户在Linux主机上单独开设一个系统用户(share)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远">
 
 
 
@@ -123,7 +124,7 @@
 
   
   
-  <link rel="canonical" href="https://cheung.site/categories/">
+  <link rel="canonical" href="https://cheung.site/2019/09/19/samba-service/">
 
 
 
@@ -133,7 +134,7 @@
   };
 </script>
 
-  <title>分类 | 工程师学徒</title>
+  <title>Samba文件共享 | 工程师学徒</title>
   
 
 
@@ -270,7 +271,7 @@
         
         
           
-          <li class="menu-item menu-item-categories menu-item-active">
+          <li class="menu-item menu-item-categories">
 
     
     
@@ -341,140 +342,206 @@
           
             
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
           
           <div id="content" class="content">
             
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cheung.site/2019/09/19/samba-service/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="龚华昌">
+      <meta itemprop="description" content="<h6>每一个认真的技术人<br/>心底都有一个技术英雄梦</h6>">
+      <meta itemprop="image" content="/images/sanji.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="工程师学徒">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-<h1 class="post-title" itemprop="name headline">分类
-
-</h1>
-
-<div class="post-meta">
-  
-  
-
-
-
-</div>
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="category-all-page">
-            <div class="category-all-title">
+          <h1 class="post-title" itemprop="name headline">Samba文件共享
+
               
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-                
-                  
-                
-              
-              目前共计 14 个分类
-            </div>
-            <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Hadoop/">Hadoop</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Scala/">Scala</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Spark/">Spark</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/信息检索/">信息检索</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发环境/">开发环境</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/数学/">数学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/树莓派/">树莓派</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/概率统计/">概率统计</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/源码/">源码</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/自娱自乐/">自娱自乐</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/自然语言处理/">自然语言处理</a><span class="category-list-count">2</span></li></ul>
-            </div>
-          </div>
+            
+          </h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-09-19 11:55:23" itemprop="dateCreated datePublished" datetime="2019-09-19T11:55:23+08:00">2019-09-19</time>
+            
+
+            
+          </span>
+
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <blockquote>
+<p>有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。</p>
+</blockquote>
+<h2 id="Samba安装"><a href="#Samba安装" class="headerlink" title="Samba安装"></a>Samba安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install samba</span><br></pre></td></tr></table></figure>
+
+<h2 id="Samba用户"><a href="#Samba用户" class="headerlink" title="Samba用户"></a>Samba用户</h2><p>在Linux主机上单独开设一个系统用户(<code>share</code>)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远程登录机器。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir /home/share</span><br><span class="line">$ sudo useradd -d /home/share -s /usr/sbin/nologin share</span><br><span class="line">$ sudo passwd share</span><br></pre></td></tr></table></figure>
+
+<p>Samba服务维护了一份用户和密码名单，这些用户必须是已有的系统用户，但samba用户的密码与系统用户的密码是不一样的，通过<code>smbpasswd</code>命令设置。</p>
+<p>通过下面命令给Samba的<code>share</code>用户设置Samba密码，在别的机器连接Samba共享文件夹时就是使用下面指定的用户和密码进行验证:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo smbpasswd -a share</span><br></pre></td></tr></table></figure>
+
+<h2 id="Samba配置"><a href="#Samba配置" class="headerlink" title="Samba配置"></a>Samba配置</h2><p>修改配置前先备份配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cp /etc/samba/smb.conf /etc/samba/smb.conf.bak</span><br></pre></td></tr></table></figure>
+
+<p>在<code>/etc/samba/smb.conf</code>末尾添加以下内容</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[share]</span><br><span class="line">   comment = Share Folder</span><br><span class="line">   path = /home/share</span><br><span class="line">   browseable = yes </span><br><span class="line">   writeable = yes </span><br><span class="line">   <span class="built_in">read</span> only = no</span><br><span class="line">   create mask = 0644</span><br><span class="line">   directory mask = 0755</span><br></pre></td></tr></table></figure>
+
+<p><code>path</code>为共享的目录，根据实际情况修改。对于<code>path</code>指定的目录，需要更改权限（<code>sudo chmod 755 /home/share</code>），否则会导致在其他机器上连接Samba后无法修改或者添加文件。</p>
+
       
     </div>
-    
-
-
 
     
+
     
     
+    
+
+    <div>
+      
+        <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">本文结束<i class="fa fa-paw"></i>感谢您的阅读</div>
+    
+</div>
+      
+    </div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Samba/" rel="tag"><i class="fa fa-tag"></i> Samba</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/17/vsftpd-on-ubuntu/" rel="next" title="Linux环境下vsftpd的安装及配置">
+                <i class="fa fa-chevron-left"></i> Linux环境下vsftpd的安装及配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
   </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="gitalk-container">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -494,8 +561,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -730,6 +806,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Samba安装"><span class="nav-number">1.</span> <span class="nav-text">Samba安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Samba用户"><span class="nav-number">2.</span> <span class="nav-text">Samba用户</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Samba配置"><span class="nav-number">3.</span> <span class="nav-text">Samba配置</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -873,6 +966,37 @@
 
   
 
+
+  
+    
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+
+
+<script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+<script>
+  var gitalk = new Gitalk({
+    clientID: 'ff0c5c51f211d005fc30',
+    clientSecret: '58861557953a473e62b03fe86e91e987c76b33cc',
+    repo: 'wahcheung.github.io',
+    owner: 'wahcheung',
+    admin: ['wahcheung'],
+    id: md5(location.pathname),
+    
+      language: window.navigator.language || window.navigator.userLanguage,
+    
+    distractionFreeMode: 'true'
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+  
 
 
   

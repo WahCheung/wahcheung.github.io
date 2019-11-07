@@ -111,10 +111,16 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="问题描述$$E(w)=\frac{1}{N}\sum_{n=1}^{N} {y(x_n, w)-t_n}^2 + \lambda {\lVert w \rVert}^2$$ 关于机器学习的书很多都会讲到结构风险最小化，它是为了防止过拟合而提出来的策略。很多的讲解都以上面的公式作为例子，公式第一项是经验风险，第二项是表示模型复杂度的正则化项(或者说是对复杂模型的惩罚项)。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:26.000Z">
+<meta property="og:image" content="https://cheung.site/images/regularization/plot-of-training-data-set.png">
+<meta property="og:image" content="https://cheung.site/images/regularization/plots-of-polynomials-having-various-orders.png">
+<meta property="og:image" content="https://cheung.site/images/regularization/root-mean-square-error-for-polynomials-of-various-orders.png">
+<meta property="og:image" content="https://cheung.site/images/regularization/table-of-coefficients-for-polynomials-of-various-order.png">
+<meta property="og:image" content="https://cheung.site/images/regularization/solutions-comparison-using-different-size-of-data-points.png">
+<meta property="og:updated_time" content="2019-11-07T14:15:14.296Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则化">
 <meta name="twitter:description" content="问题描述$$E(w)=\frac{1}{N}\sum_{n=1}^{N} {y(x_n, w)-t_n}^2 + \lambda {\lVert w \rVert}^2$$ 关于机器学习的书很多都会讲到结构风险最小化，它是为了防止过拟合而提出来的策略。很多的讲解都以上面的公式作为例子，公式第一项是经验风险，第二项是表示模型复杂度的正则化项(或者说是对复杂模型的惩罚项)。">
+<meta name="twitter:image" content="https://cheung.site/images/regularization/plot-of-training-data-set.png">
 
 
 
@@ -464,37 +470,32 @@
 
 <p>经验风险表示模型表达数据的误差(上面的公式使用均方误差)；而正则化项的加入是为了惩罚过于复杂的模型。对于这一点，早就深深刻入脑子里了，后来细看PRML，才发现以前太过于囫囵吞枣。一个需要理解的关键问题是，上面公式的正则化项中${\lVert w \rVert}^2$(即$L_2范数$)为什么可以表示模型复杂度，从而使正则化具有惩罚复杂模型的作用呢？<br>这是一篇PRML读书笔记，着重于对知识的整理，下面的图都标注了来源(主要来自PRML一书)。</p>
 <h3 id="多项式曲线拟合"><a href="#多项式曲线拟合" class="headerlink" title="多项式曲线拟合"></a>多项式曲线拟合</h3><p>下面通过PRML中多项式曲线拟合的例子来理解这一问题。首先，如图1所示，通过对函数$t=\sin(2 \pi x)$加入随机噪声来生成若干训练样本。图1中的蓝色小圈表示训练样本，绿色曲线是用于生成数据的函数$t=\sin(2 \pi x)$</p>
-<center>![训练样本与需要拟合的曲线](/images/regularization/plot-of-training-data-set.png)</center>
-
+<p><img src="/images/regularization/plot-of-training-data-set.png" alt="训练样本与需要拟合的曲线"></p>
 <center>图1(PRML Figure 1.2)：加入噪声的10个数据点</center>
 
 <p>我们使用下面的多项式函数来做拟合</p>
 <p>$$y(x,w)=w_0+w_{1}x+w_{2}x^2+\dots+w_{M}x^M=\sum_{j=0}^{M}{w_{j}x^j}$$</p>
 <p>其中M是多项式最高次项的次数(order)。<br>我们也可以把$w_0,\dots,w_M$合起来表示为$w$，这些参数($w$)可以通过最小化误差函数来决定，一个常用的误差函数是样本的均方误差之和，即下式</p>
 <p>$$E(w)=\sum_{n=1}^{N} {y(x_n,w)-t_n}^2$$</p>
-<p>最小化上式就是常见的最小二乘法，对于给定的M(多项式的order)可以通过对各个参数求导来求解，这里就不继续展开了。现在问题来了，M的值取多少好呢？若取$M=0$，$y(x,w)=w_0$就是一条与$x$轴平行的直线；若取$M=1$，$y(x,w)=w_0+w_{1}x$就是一条斜率为$w_{1}$的直线；若取$M=1$就是一条二次曲线等~
+<p>最小化上式就是常见的最小二乘法，对于给定的M(多项式的order)可以通过对各个参数求导来求解，这里就不继续展开了。现在问题来了，M的值取多少好呢？若取$M=0$，$y(x,w)=w_0$就是一条与$x$轴平行的直线；若取$M=1$，$y(x,w)=w_0+w_{1}x$就是一条斜率为$w_{1}$的直线；若取$M=2$就是一条二次曲线等~
 我们用不同的$M$值(不同的多项式模型)做实验，得到下面的结果</p>
-<center>![不同次数的多项式拟合的结果](/images/regularization/plots-of-polynomials-having-various-orders.png)</center>
-
+<p><img src="/images/regularization/plots-of-polynomials-having-various-orders.png" alt="不同次数的多项式拟合的结果"></p>
 <center>图2(PRML Figure 1.4)：不同次数的多项式拟合的结果</center>
 
 <p>从上图可以看到，取多项式次数$M&lt;2$时，拟合效果相当差；而取$M=9$时，10个训练样本点全都落在了曲线上(完美拟合了训练样本)。嗯，知道真相的我们肯定不会认为$M=9$这个看着完美的结果是最好的。为了验证这些结果是否理想，我们用同样的方法生成了一些测试样本，测试的均方误差(对方差取平均)结果如下</p>
-<center>![不同模型的均方误差](/images/regularization/root-mean-square-error-for-polynomials-of-various-orders.png)</center>
-
+<p><img src="/images/regularization/root-mean-square-error-for-polynomials-of-various-orders.png" alt="不同模型的均方误差"></p>
 <center>图3(PRML Figure 1.5)：不同模型的均方误差</center>
 
 <p>由图3可以看到，当$M=0,1,2$，参数也分别只有$1,2,3$个，代表简单的模型，这几个模型对训练样本和测试样本的拟合效果都不好(误差大)，当$M$取值越大，参数越多，模型越来越复杂，模型对训练样本的拟合效果越来越好(蓝色线)，足够复杂的模型可以完全拟合训练样本($M \geq 9$)；另一方面，选择越来越复杂的模型，测试误差经历了先下降再升高的过程，当$3 \leq M \leq 8$时，模型的测试结果比较好；当模型复杂度很高时($M \geq 9$)，测试误差剧增，表明该模型对未知(unseen)样本的拟合非常差。</p>
 <h3 id="正则化的作用"><a href="#正则化的作用" class="headerlink" title="正则化的作用"></a>正则化的作用</h3><p>誒，从上面的训练和测试结果来看，我们直接把不同的$M$值都尝试一遍，然后选择测试误差最小的模型不就OK了么，这样得到的模型泛化能力并不差(在测试样本上体现)，哪需要多整一个正则化项？<br>先看看上面的实验表现出来的看似矛盾的地方：低次多项式实际上是更高次多项式的子集(令多出的高次项的系数为0可得)，也就是说$M=9$的多项式可以实现的拟合结果至少不会比$M=3$的多项式差；另一方面，学过微积分的同学大概记得我们生成数据的函数$\sin(2\pi x)$的泰勒展开式包含所有次项，我们的测试结果理应随着$M$值增大而不断改善。<br>带着疑惑，我们看看当多项式最高次数$M$变化时，通过最小化均方误差得到的模型的各个参数的值</p>
-<center>![不同多项式模型的参数值](/images/regularization/table-of-coefficients-for-polynomials-of-various-order.png)</center>
-
+<p><img src="/images/regularization/table-of-coefficients-for-polynomials-of-various-order.png" alt="不同多项式模型的参数值"></p>
 <center>图4(PRML Table 1.1)：不同多项式模型的参数值</center>
 
 <p>通过上图可以看到，采用更大的$M$值，多项式的系数的值(绝对值)变得越来越大。当$M=9$时，参数值变得异常大，曲线完全拟合了测试样本，但却偏离实际的$\sin(2\pi x)$甚远，得到的结果的系数与$\sin(2\pi x)$的泰勒展开式的系数差异巨大。<br>单纯地采取使均方误差(MSE)最小化的策略，会使得模型不断地去适应训练样本，当模型越来越复杂，就像贪食蛇游戏一样，曲线剧烈抖动力求经过每一个训练样本点，导致模型的参数(magnitude)非常大。也就是说，复杂的模型过度拟合训练样本会使得参数值很大。要限制模型这种过度适应训练样本的行为，于是引入了正则化，通过惩罚模型过大的参数值来防止模型对训练样本的过拟合。也就是开篇的公式</p>
 <p>$$E(w)=\frac{1}{N}\sum_{n=1}^{N} {y(x_n, w)-t_n}^2 + \lambda {\lVert w \rVert}^2$$</p>
 <p>通过正则化，$M\geq 9$的多项式模型可以获得更好的结果，这样一来，“低次多项式模型拟合效果比高次多项式更好”的矛盾就解决了。由于高次多项式是包含低次多项式的，这样的模型的表达能力更强，而正则化正好可以实现这种模型复杂度的缩放变化，复杂模型中提高罚项(penalty term)的权重可以让一些参数变为零(或接近零)，降低模型的实际复杂度，从而可以退化为更简单的模型。<br>上面提到一个问题，我们直接把不同的$M$值都尝试一遍，然后选择测试误差最小的模型不就OK了么，这样得到的模型泛化能力并不差(但并非让人满意)，哪需要多整一个正则化项？这样做不好的原因是，通过经验风险最小化获得的模型，模型复杂度高时(模型参数多)，由于高度拟合训练样本，测试结果往往很差，就如图2所示。结果就是，这样的策略倾向于选择参数数量少($M$值小)的模型，以至于得到的过于简单的模型根本无法还原真实数据的原貌[缺点与Akaike information criterion(AIC)惊人地相似)]。而采取正则化的结构风险最小化方法避免了这些问题。</p>
 <h3 id="增加样本数量可以缓解过拟合问题"><a href="#增加样本数量可以缓解过拟合问题" class="headerlink" title="增加样本数量可以缓解过拟合问题"></a>增加样本数量可以缓解过拟合问题</h3><p>如果真要不加正则化项的话(直接采用经验风险最小化策略，使均方误差MSE最小)，同等模型复杂度下，增加训练样本数量可以缓解过拟合的问题。</p>
-<center>![不同训练样本数量下的结果比较](/images/regularization/solutions-comparison-using-different-size-of-data-points.png)</center>
-
+<p><img src="/images/regularization/solutions-comparison-using-different-size-of-data-points.png" alt="不同训练样本数量下的结果比较"></p>
 <center>图4(PRML Figure 1.6)：$M=9$的多项式在不同训练样本数量下的结果比较</center>
 
 <h3 id="正则化与奥卡姆剃刀原则"><a href="#正则化与奥卡姆剃刀原则" class="headerlink" title="正则化与奥卡姆剃刀原则"></a>正则化与奥卡姆剃刀原则</h3><p>正则化是符合奥卡姆剃刀原则的，在可选的模型中，我们选择简单易解释的模型。模型简单与否，我们通过规则函数来判断。</p>
@@ -633,7 +634,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -783,7 +784,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

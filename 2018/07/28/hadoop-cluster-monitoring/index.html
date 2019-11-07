@@ -111,10 +111,13 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="本文的控制台输出都基于一个四台虚拟主机的Hadoop集群，这个集群的搭建过程参考 Hadoop完全分布式集群部署，集群概况如下：    角色 主机名(hostname) IP地址    Master sun 192.168.118.101   Slave mercury 192.168.118.102   Slave venus 192.168.118.103   Slave earth 192.">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:26.000Z">
+<meta property="og:image" content="https://cheung.site/images/hadoop-cluster-monitoring/hdfs-webui.png">
+<meta property="og:image" content="https://cheung.site/images/hadoop-cluster-monitoring/yarn-webui.png">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.101Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hadoop集群监控">
 <meta name="twitter:description" content="本文的控制台输出都基于一个四台虚拟主机的Hadoop集群，这个集群的搭建过程参考 Hadoop完全分布式集群部署，集群概况如下：    角色 主机名(hostname) IP地址    Master sun 192.168.118.101   Slave mercury 192.168.118.102   Slave venus 192.168.118.103   Slave earth 192.">
+<meta name="twitter:image" content="https://cheung.site/images/hadoop-cluster-monitoring/hdfs-webui.png">
 
 
 
@@ -503,8 +506,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hdfs dfsadmin -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="通过浏览器-WebUI-监控HDFS"><a href="#通过浏览器-WebUI-监控HDFS" class="headerlink" title="通过浏览器(WebUI)监控HDFS"></a>通过浏览器(WebUI)监控HDFS</h3><p>可视化真是个好东西，通过WebUI监控HDFS直观多了。master(namenode)的WebUI通过在<code>hdfs-site.xml</code>中设置<code>dfs.namenode.http-address</code>来设置，默认namenode的<code>50070</code>端口。浏览器打开地址(hadoop-master-ip替换为hadoop集群master的ip): <a href="http://hadoop-master-ip:50070" target="_blank" rel="noopener">http://hadoop-master-ip:50070</a></p>
-<center>![HDFS WebUI](/images/hadoop-cluster-monitoring/hdfs-webui.png)</center><br>
-
+<p><img src="/images/hadoop-cluster-monitoring/hdfs-webui.png" alt="HDFS WebUI"><br></p>
 <blockquote>
 <p>我们可以看到页面顶部菜单栏有如下几个监控目标:<br>|Overview|DataNodes|Datanode Volumn Failures|Snapshot|Startup Progress|Utilities|<br>Overview: 集群概况，与通过<code>hdfs dfsadmin -report</code>获取的信息类似；<br>DataNodes: 各个DN(Datanode)的状态、容量、Blocks数量等信息；<br>Datanode Volumn Failures: 记录DN的异常；<br>Snapshot: Snapshot Summary<br>Startup Progress: 记录HDFS启动过程和状态，包括装载fsimage和edits，checkpoint信息；<br>Utilities: 这个很方便实用！下拉有两个选项，”Browse the file system”和”Logs”，”Browse the file system”以图形界面的方式查看HDFS文件系统存储的内容，”Logs”可以查看hadoop-master节点的日志。</p>
 </blockquote>
@@ -515,8 +517,7 @@
 
 <p>[贴心提醒：hdfs命令和yarn命令不需要在master上执行也可以获得一样的结果。]</p>
 <h3 id="通过浏览器-WebUI-监控YARN"><a href="#通过浏览器-WebUI-监控YARN" class="headerlink" title="通过浏览器(WebUI)监控YARN"></a>通过浏览器(WebUI)监控YARN</h3><p>YARN默认http端口为8088，浏览器打开地址(hadoop-master-ip替换为hadoop集群master的ip): <a href="http://hadoop-master-ip:8088" target="_blank" rel="noopener">http://hadoop-master-ip:8088</a></p>
-<center>![YARN WebUI](/images/hadoop-cluster-monitoring/yarn-webui.png)</center><br>
-
+<p><img src="/images/hadoop-cluster-monitoring/yarn-webui.png" alt="YARN WebUI"><br></p>
 <h2 id="日志监控"><a href="#日志监控" class="headerlink" title="日志监控"></a>日志监控</h2><p>通过<code>jps</code>/<code>hdfs</code>/<code>yarn</code>这些命令行工具，我们可以快速查看集群的状态，但如果某些节点出问题了或者是发现某些进程没有正常启动(总之就是发现异常吧)，还是要通过日志打印来了解异常的详情然后寻求解决办法。Hadoop的日志在<code>${HADOOP_HOME}/logs</code>目录下。</p>
 <p>参考文献:<br>[1] <a href="https://www.linode.com/docs/databases/hadoop/how-to-install-and-set-up-hadoop-cluster/" target="_blank" rel="noopener">https://www.linode.com/docs/databases/hadoop/how-to-install-and-set-up-hadoop-cluster/</a><br>[2] <a href="http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml" target="_blank" rel="noopener">http://hadoop.apache.org/docs/current/hadoop-project-dist/hadoop-hdfs/hdfs-default.xml</a><br>[3] <a href="http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml" target="_blank" rel="noopener">http://hadoop.apache.org/docs/current/hadoop-yarn/hadoop-yarn-common/yarn-default.xml</a></p>
 
@@ -652,7 +653,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -802,7 +803,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

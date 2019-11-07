@@ -111,10 +111,22 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="系统环境 Windows 10 jdk1.8 scala2.11.8 Intellij IDEA 2017.1.4 winutil.exe (下载地址: https://github.com/steveloughran/winutils) spark-2.2.0-bin-hadoop2.7.tgz (下载地址: http://spark.apache.org/downloads.html)">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:27.000Z">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/scala-spark-version.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/idea-based-project.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/new-project.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/project-structure.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/create-new-scala-object-choose-object-kind.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/scala-spark-code-with-errors.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/select-library-files.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/scala-spark-code-without-errors.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/project-structure-create-jar-from-modules.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/generate-jar.png">
+<meta property="og:image" content="https://cheung.site/images/spark-development-with-intellij-idea/remove-spark-scala-jars.png">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Windows系统中搭建Spark开发环境">
 <meta name="twitter:description" content="系统环境 Windows 10 jdk1.8 scala2.11.8 Intellij IDEA 2017.1.4 winutil.exe (下载地址: https://github.com/steveloughran/winutils) spark-2.2.0-bin-hadoop2.7.tgz (下载地址: http://spark.apache.org/downloads.html)">
+<meta name="twitter:image" content="https://cheung.site/images/spark-development-with-intellij-idea/scala-spark-version.png">
 
 
 
@@ -474,31 +486,23 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scala -version</span><br></pre></td></tr></table></figure>
 
 <p>注：scala版本需要与spark版本兼容，否则编译报错NoSuchMethodError。官网下载Spark时提示Spark2.0之后是使用Scala2.11编译的，因此选择使用Scala2.11.x。关于各个Spark版本适用的Scala可以到<br><a href="http://spark.apache.org/docs/" target="_blank" rel="noopener">Spark官方文档目录</a> 查询。该页面下，根据你选择的Spark版本，点击进入对应的目录，然后在副标题 <strong>Downloading</strong> 那一段查看该Spark版本支持的Scala版本。如下图：</p>
-<center>![scala-spark-version](/images/spark-development-with-intellij-idea/scala-spark-version.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/scala-spark-version.png" alt="scala-spark-version"></p>
 <h3 id="新建Scala项目"><a href="#新建Scala项目" class="headerlink" title="新建Scala项目"></a>新建Scala项目</h3><p>打开IEDA, File → New → Project → Scala → 项目类型选IEDA → Next → 选择Scala SDK位置 → Finish<br>Scala项目类型那一步选择IDEA，如下图，这个类型在较新版本的Intellij中才有（因此建议升级2017.x之后的版本），感觉比SBT好用很多（SBT要修改配置文件、写入库依赖关系，比较麻烦）：</p>
-<center>![idea-based-project](/images/spark-development-with-intellij-idea/idea-based-project.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/idea-based-project.png" alt="idea-based-project"></p>
 <p>新工程命名为SparkDemo。</p>
-<center>![new-project](/images/spark-development-with-intellij-idea/new-project.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/new-project.png" alt="new-project"></p>
 <p>新建立好的工程目录如下图：</p>
-<center>![project-structure](/images/spark-development-with-intellij-idea/project-structure.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/project-structure.png" alt="project-structure"></p>
 <h3 id="测试程序"><a href="#测试程序" class="headerlink" title="测试程序"></a>测试程序</h3><p>在Project的src目录下新建Scala Class（选中src目录，鼠标右键，选择New → Scala Class），类型(kind)选择object，命名为HelloSpark，如下图：</p>
-<center>![create-new-scala-object-choose-object-kind](/images/spark-development-with-intellij-idea/create-new-scala-object-choose-object-kind.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/create-new-scala-object-choose-object-kind.png" alt="create-new-scala-object-choose-object-kind"></p>
 <p>在新建的<code>HelloSpark.scala</code>中贴入以下测试代码（统计HelloSpark.scala文件中字母a和字母b的出现次数）：</p>
 <figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.&#123;<span class="type">SparkConf</span>, <span class="type">SparkContext</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">HelloSpark</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]) &#123;</span><br><span class="line">    <span class="keyword">val</span> logFile = <span class="string">"src/HelloSpark.scala"</span></span><br><span class="line">    <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"Simple Application"</span>).setMaster(<span class="string">"local[*]"</span>)</span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line">    <span class="keyword">val</span> logData = sc.textFile(logFile, <span class="number">2</span>).cache()</span><br><span class="line">    <span class="keyword">val</span> numAs = logData.filter(line =&gt; line.contains(<span class="string">"a"</span>)).count()</span><br><span class="line">    <span class="keyword">val</span> numBs = logData.filter(line =&gt; line.contains(<span class="string">"b"</span>)).count()</span><br><span class="line">    println(<span class="string">"Lines with a: %s, Lines with b: %s"</span>.format(numAs, numBs))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<center>![scala-spark-code-with-errors](/images/spark-development-with-intellij-idea/scala-spark-code-with-errors.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/scala-spark-code-with-errors.png" alt="scala-spark-code-with-errors"></p>
 <p>通过上图可以看到，Intellij IDEA检查到了非常多的错误，此时的程序由于缺少Spark相关的jar包而无法编译通过。现在我们给当前这个工程导入Spark相关的jar包。<br>菜单栏 File → Project Structure → 左侧Project Settings点击选中Libraries → 点击中间的”+”然后选择Java → 选中spark目录下的jars目录 → OK → Apply → OK</p>
-<center>![scala-spark-code-without-errors](/images/spark-development-with-intellij-idea/select-library-files.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/select-library-files.png" alt="scala-spark-code-without-errors"></p>
 <p>稍等片刻，程序运行所需要的jar包就会导入完毕，再次查看HelloSpark.scala，会发现编辑器中的红色错误提示都消失了。如果继续添加代码，会发现已经有Spark API的智能提示了。</p>
-<center>![scala-spark-code-without-errors](/images/spark-development-with-intellij-idea/scala-spark-code-without-errors.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/scala-spark-code-without-errors.png" alt="scala-spark-code-without-errors"></p>
 <p>现在，已经可以运行这个Scala-Spark程序了。在控制台输出中，你可能会看到这样一个错误：(这个错误并不会导致程序中断，也不会影响正确结果的输出，但程序出现Error很难受，下面有消除这个错误的方法)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ERROR Shell: Failed to locate the winutils binary in the hadoop binary path</span><br><span class="line">java.io.IOException: Could not locate executable null\bin\winutils.exe in the Hadoop binaries.</span><br></pre></td></tr></table></figure>
 
@@ -511,14 +515,11 @@
 
 <p>程序没有因为异常而中断的话，Windows下Spark开发环境搭建成功。</p>
 <h3 id="生成jar包"><a href="#生成jar包" class="headerlink" title="生成jar包"></a>生成jar包</h3><p>在开发环境中把spark scala代码写好后需要把程序部署到服务器，这时候需要打包程序。打包过程如下：<br>菜单栏 File → Project Structure, 然后根据下图操作：步骤3中点击“+”，选择“JAR”，右侧展开栏选择“From modules with dependencies”</p>
-<center>![project-structure-create-jar-from-modules](/images/spark-development-with-intellij-idea/project-structure-create-jar-from-modules.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/project-structure-create-jar-from-modules.png" alt="project-structure-create-jar-from-modules"></p>
 <p>菜单栏 Build → Build Artifacts → Build<br>稍等片刻，编译通过后，Intellij IDEA底部会出现“Compilation completed successfully in *s *ms”的提示。<br>观察工程目录，会发现已经生成了<code>HelloSpark.jar</code>，如下图所示：</p>
-<center>![generate-jar](/images/spark-development-with-intellij-idea/generate-jar.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/generate-jar.png" alt="generate-jar"></p>
 <p>嗯，如果现在把程序部署到服务器，你会发现这个HelloSpark.jar包出乎意料的大，约200MB…这是因为编译的时候IEDA把Spark和Scala的相关库也打包了，因为服务器上已经安装了Scala并且搭建好了Spark运行环境，因此我们并不需要将Spark和Scala相关的库打包进目标程序的jar包。<br>再次打开Project Structure作最后的修改：<br>菜单栏 File → Project Structure → Artifacts，界面如下：</p>
-<center>![generate-jar](/images/spark-development-with-intellij-idea/remove-spark-scala-jars.png)</center>
-
+<p><img src="/images/spark-development-with-intellij-idea/remove-spark-scala-jars.png" alt="generate-jar"></p>
 <p>选中那些Spark和Scala相关的jar包，点击中间上方的“-”按钮将其删除，然后点击右下角的“Apply”使修改生效。<br>最后，菜单栏 Build → Build Artifacts → Rebuild<br>再次查看生成的HelloSpark.jar的文件大小，大约只有几KB，大功告成。</p>
 
       
@@ -655,7 +656,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -805,7 +806,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

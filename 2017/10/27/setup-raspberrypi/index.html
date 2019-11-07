@@ -111,10 +111,17 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="硬件准备 树莓派3B Class 10 SD卡(容量不小于8G) 读卡器">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:27.000Z">
+<meta property="og:image" content="https://cheung.site/images/setup-raspberrypi/board.jpg">
+<meta property="og:image" content="https://cheung.site/images/setup-raspberrypi/win32diskimager.jpg">
+<meta property="og:image" content="https://cheung.site/images/setup-raspberrypi/sdcard.jpg">
+<meta property="og:image" content="https://cheung.site/images/setup-raspberrypi/ssh.jpg">
+<meta property="og:image" content="https://cheung.site/images/setup-raspberrypi/power-on.jpg">
+<meta property="og:image" content="https://cheung.site/images/setup-raspberrypi/ip-address.jpg">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.109Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="树莓派安装指南">
 <meta name="twitter:description" content="硬件准备 树莓派3B Class 10 SD卡(容量不小于8G) 读卡器">
+<meta name="twitter:image" content="https://cheung.site/images/setup-raspberrypi/board.jpg">
 
 
 
@@ -466,27 +473,21 @@
 <a id="more"></a>
 
 <p>树莓派3B主板如下图：</p>
-<center>![树莓派3B主板](/images/setup-raspberrypi/board.jpg)</center>
-
+<p><img src="/images/setup-raspberrypi/board.jpg" alt="树莓派3B主板"></p>
 <p>为了缓解小机器的散热问题，在CPU、GPU和内存区域贴上了散热片。<br>为保证树莓派系统的运行速度，Class 10的SD卡非常重要。容量不小于8G，我用的是16G的。如果是新卡，直接进入下面的步骤就可以了。如果已经在卡上烧录过树莓派，那么其分区已经改变(多出一个boot分区)，可以使用Windows自带的磁盘管理将SD卡的分区删除再新建卷，实现格式化。</p>
 <h3 id="准备操作系统镜像和烧录工具"><a href="#准备操作系统镜像和烧录工具" class="headerlink" title="准备操作系统镜像和烧录工具"></a>准备操作系统镜像和烧录工具</h3><p>2017-09-07-raspbian-stretch-lite.zip 这个解压会得到树莓派的光盘镜像文件<br>树莓派系统下载地址 <a href="https://www.raspberrypi.org/downloads/raspbian/" target="_blank" rel="noopener">https://www.raspberrypi.org/downloads/raspbian/</a></p>
 <p>win32diskimager-1.0.0-install.exe Win32磁盘映像工具<br>win32diskimager下载地址 <a href="https://sourceforge.net/projects/win32diskimager/" target="_blank" rel="noopener">https://sourceforge.net/projects/win32diskimager/</a></p>
 <h3 id="树莓派系统烧录"><a href="#树莓派系统烧录" class="headerlink" title="树莓派系统烧录"></a>树莓派系统烧录</h3><p>在Windows中安装win32diskimager，并使用管理员权限打开。<br>win32diskimager打开界面中“映像文件”一栏选中解压出来的树莓派镜像，设备栏选中SD卡(一般会默认选中，确认一下)。<br>点击写入，等待写入完成。（点击写入后，会弹出提示“写入物理设备可能会造成该设备不可使用.是否继续”，不必理会，点击“yes”继续）</p>
-<center>![win32diskimager](/images/setup-raspberrypi/win32diskimager.jpg)</center>
-
+<p><img src="/images/setup-raspberrypi/win32diskimager.jpg" alt="win32diskimager"></p>
 <p>完成后会提示“写入成功”。写入成功后，可以看到SD卡被切分为两部分（boot就是树莓派的boot分区），如下图：</p>
-<center>![分区的SD卡](/images/setup-raspberrypi/sdcard.jpg)</center>
-
+<p><img src="/images/setup-raspberrypi/sdcard.jpg" alt="分区的SD卡"></p>
 <p>刚烧录好的SD卡直接插入树莓派上电开机的话，是无法对树莓派进行操作的，因为无法ssh登陆。先做完下面一步再插卡开机。</p>
 <h3 id="让树莓派开启SSH服务"><a href="#让树莓派开启SSH服务" class="headerlink" title="让树莓派开启SSH服务"></a>让树莓派开启SSH服务</h3><p>在的boot分区下新建一个空白文件，命名为ssh，不要有任何后缀。树莓派启动后检测到这个文件会自动启用ssh服务。随后就可以通过ssh连接到树莓派了。至于怎么找到树莓派的IP地址，下文再说。</p>
-<center>![新建ssh文件](/images/setup-raspberrypi/ssh.jpg)</center>
-
+<p><img src="/images/setup-raspberrypi/ssh.jpg" alt="新建ssh文件"></p>
 <h3 id="开机、查找树莓派IP地址"><a href="#开机、查找树莓派IP地址" class="headerlink" title="开机、查找树莓派IP地址"></a>开机、查找树莓派IP地址</h3><p>插入SD卡，接上网线，打开电源。<br>看到树莓派几个指示灯正常：</p>
-<center>![树莓派开机](/images/setup-raspberrypi/power-on.jpg)</center>
-
+<p><img src="/images/setup-raspberrypi/power-on.jpg" alt="树莓派开机"></p>
 <p>这时候，我们需要找到树莓派的IP才能使用ssh连接到机器上。一般使用路由器查询。家用网络中，打开路由器的管理界面，可以看到连接在线的设备，找到<em>raspberrypi</em>（树莓派Raspbian系统的默认主机名是raspberrypi），查看对应的IP得知即可获取到树莓派的IP。</p>
-<center>![树莓派IP](/images/setup-raspberrypi/ip-address.jpg)</center>
-
+<p><img src="/images/setup-raspberrypi/ip-address.jpg" alt="树莓派IP"></p>
 <p>找到IP之后就可以使用熟悉的VNC客户端连接到树莓派了（如Xshell、SecureCRT、Putty等）。树莓派Raspbian系统默认登录用户名为pi，该账户默认密码是raspberry。登陆后会出现以下提示，提示更改密码。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SSH is enabled and the default password for the &apos;pi&apos; user has not been changed.</span><br><span class="line">This is a security risk - please login as the &apos;pi&apos; user and type &apos;passwd&apos; to set a new password.</span><br></pre></td></tr></table></figure>
 
@@ -633,7 +634,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -783,7 +784,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>

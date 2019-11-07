@@ -111,10 +111,16 @@
 <meta property="og:site_name" content="工程师学徒">
 <meta property="og:description" content="最近在看《Introduction to Information Retrieval》（中文版为《信息检索导论》，下文简称为“IR”），是最经典的信息检索书籍之一了。由于淞姐要求我细读这本书然后跟同事分享，就有了这个版块，之后会陆续添加后续章节内容。即使是站在巨人的肩膀上了（看了中文版和英文版IR，也从网上搜集了不少内容），但很多细节往往还是需要自己用心体会。从一个读者到一个讲解人，在第一次做分">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-05-13T11:59:26.000Z">
+<meta property="og:image" content="https://cheung.site/images/boolean-retrieval/structure-of-inverted-index.jpg">
+<meta property="og:image" content="https://cheung.site/images/boolean-retrieval/construct-inverted-index.jpg">
+<meta property="og:image" content="https://cheung.site/images/boolean-retrieval/sample-intersection-of-two-postings-lists.jpg">
+<meta property="og:image" content="https://cheung.site/images/boolean-retrieval/algorithm-intersection-of-two-postings-lists.jpg">
+<meta property="og:image" content="https://cheung.site/images/boolean-retrieval/process-of-merging-sorted-postings-lists.jpg">
+<meta property="og:updated_time" content="2019-11-07T14:10:49.101Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="布尔检索模型">
 <meta name="twitter:description" content="最近在看《Introduction to Information Retrieval》（中文版为《信息检索导论》，下文简称为“IR”），是最经典的信息检索书籍之一了。由于淞姐要求我细读这本书然后跟同事分享，就有了这个版块，之后会陆续添加后续章节内容。即使是站在巨人的肩膀上了（看了中文版和英文版IR，也从网上搜集了不少内容），但很多细节往往还是需要自己用心体会。从一个读者到一个讲解人，在第一次做分">
+<meta name="twitter:image" content="https://cheung.site/images/boolean-retrieval/structure-of-inverted-index.jpg">
 
 
 
@@ -615,8 +621,7 @@
 <p>读者可能奇怪为什么这种基于位(bit)的逻辑操作可以得到正确的结果。我们举个简单的例子，如果另外一个用户提交了查询“cat AND apple”，我们需要从表2取出cat和apple对应的行向量。读者观察一下表2的那些行向量都是什么形式？cat的行向量(110)的第一位的1表示文档$d_1$包含词项cat，第二位的1表示文档$d_2$包含词项cat，第三位是0，表示文档$d_3$不包含词项cat。<strong>词项对应的行向量的第$i$位表明这个词项是否包含于第$i$个文档($d_i$)中！</strong>对于查询“cat AND apple”，需要返回同时包含cat和apple的文档。我们取出cat和apple对应的行向量，分别为(110)和(101)，根据“一个词项对应的行向量的第i位表明这个词项是否包含于第i个文档($d_i$)中”，词项cat和apple的行向量的第i位如果都是1表明$d_i$同时包含cat和apple，否则不同时包含cat和apple。因此cat和apple对应的行向量做AND操作可以获得同时包含cat和apple的文档都有哪些。(110) AND (101) = (100)，只有文档$d_1$符合查询要求。我们再看一个例子，对于查询“NOT apple”，需要返回不包含apple的文档。我们从表2取出apple对应的行向量(101)，我们已经知道对应位为1表示文档包含这个词项，那么，现在我们需要查询不包含这个词项的文档，当然就是取反了(NOT操作)。NOT (101) = (010)，结果(010)表示第一个和第三个文档都包含apple，只有第二个文档$d_2$不包含apple。至此，通过这几个简单的例子，读者应该能够理解这种布尔表达式查询的工作原理了。</p>
 <p>为了向倒排索引的概念平滑过渡，现在我们考虑一个更真实的场景(使用IR中的例子)。假如我们有100万篇文档(document)，每篇文档大约1000个词，那么，通常这些文档大概会有50万个不同的词项。此时，回头看看表2(词项-文档关联矩阵)，这个矩阵的规模会变得非常巨大，会有50万行(因为有50万的词汇量)和100万列(因为有100万篇文档)，元素数量为5000亿(50万×100万)，存放这张表需要的内存远远大于一台计算机内存的容量！此外，不难发现，这个50万×100万规模的矩阵，大部分元素都是0，可以从某一列来估算，文档$d_i$平均大约有1000个单词，但$d_i$那一列却有50万个元素(因为全局有50万的词汇量)。这么一算，这个词项-文档关联矩阵大约有99.8%的元素都为0。显然，只记录原始矩阵中1的位置的话，所需的存储空间会大大地减少，倒排索引(inverted index)正是起到这样的作用！</p>
 <p>我们观察表1和表2，表1以文档为基本考察要素，而表2以词项为基本考察要素，表2由原始的表1通过inverted(转置，引申为倒排)而来，这正是倒排这个概念的由来。在倒排索引中，我们只存储那些不为0的项。倒排索引的基本结构如下图：</p>
-<center>![倒排索引基本结构](/images/boolean-retrieval/structure-of-inverted-index.jpg)</center>
-
+<p><img src="/images/boolean-retrieval/structure-of-inverted-index.jpg" alt="倒排索引基本结构"></p>
 <center>图1(IR图1-3)：倒排索引基本结构</center>
 
 <p>倒排索引带有一个词典(dictionary)，词典中的每个词项(term)都有对应的一个list，保存了这个词项在哪些文档中出现过。词项对应的list中的每一个元素我们称之为一个<strong>倒排记录(posting)</strong>，而把一个词项对应的整个list称为<strong>倒排表(posting list/inverted list)</strong>。所有词项的倒排表一起构成<strong>postings</strong>。[读者对于这几个定义不必太纠结，中文翻译过来感觉怪怪的]</p>
@@ -628,23 +633,20 @@
 <p>步骤1~3是索引构建的基础，我们做一个简要的说明。<br>步骤（1）中收集文档的工作，在Web搜索引擎中就是通过网络爬虫(<a href="https://en.wikipedia.org/wiki/Web_crawler" target="_blank" rel="noopener">web crawler</a>)来搜集分布于Web各处的网页。搜集的网页还不能直接用于后面的步骤中，还需要对网页文本做诸如去除标签，过滤广告等处理。<br>步骤（2）就是tokenization(词条化)，例如，对于英文文本而言，就是根据空格把单词一个一个地提取出来，把原始文本分割成token。当然了，如果只是这样简单的分割的话，会把“New York University”分成三个token了，因此英文也会存在短语划分问题。中文文本的话涉及的主要方法就是分词(word<br> segmentation)了，因为汉语字与字之间没有空格，并且由于文法的特殊性，词与词组的边界模糊，这让tokenization的问题更加复杂。中文分词技术属于自然语言处理的范畴，有兴趣的读者可以参考相关的专业文献。<br>步骤（3）就是将步骤（2）产生的token转为更加统一规范的词项(term),例如在文本中可能出现“apple”、“apples”、“Apple”这类token，但我们知道这几个token都是表达苹果(apple)的意思，因此，在构建索引的时候通常会把这几个token统一还原为“apple”，只为“apple”建立索引项，那么“apple”就是一个term(词项)了。倒排索引里面所有的term组成的集合我们称为词典(dictionary,也有称为词汇表(vocabulary)的)</p>
 <p>现在，假设前三步都已完成，原始的网页已经被我们分割成一个个的词项(term)。下面，我们体验一下构建基本的倒排索引的过程。</p>
 <p>给定一个文档集，给每个文档分配一个唯一的标识符(docID),通过步骤1~3，我们会得到很多的词项，用二元组的形式表示为(词项，文档ID)，表示词项在文档ID对应的文档中出现。布尔检索只考虑词项在文档中有没有出现，因此，即使一个词项在某个文档中多次出现，我们也只记录一个这样的(词项，文档ID)。建立倒排索引的图形化表示如下图2所示：</p>
-<center>![通过排序和合并构建索引的过程](/images/boolean-retrieval/construct-inverted-index.jpg)</center>
-
+<p><img src="/images/boolean-retrieval/construct-inverted-index.jpg" alt="通过排序和合并构建索引的过程"></p>
 <center>图2（IR图1-4）：通过排序和合并构建索引的过程</center>
 
 <p>图2中左边部分是由原始文档经过步骤1~3产生的(词项，文档ID)二元组；将这些二元组按照词项的字母顺序进行排序，就会把词项相同的二元组排在一起（图2中部）；最后，把同一词项的多个二元组合并在一起，这个词项出现的文档ID用list存放(也就是posting list)，并且<strong>根据文档ID排序</strong>。图中所示的倒排索引还存储了词项在文档中出现的次数(在同一个文档中多次出现算一次)。最终，我们形成了一个包含许多词项(term)的字典(dictionary)，每个词项都有一个倒排记录表(posting list)。</p>
 <p>至此，倒排索引已经建立好了，那么，如何利用这个倒排索引做布尔查询呢？</p>
 <h3 id="处理布尔查询"><a href="#处理布尔查询" class="headerlink" title="处理布尔查询"></a>处理布尔查询</h3><p>使用IR中的例子，查询为“Brutus AND Calpurnia”。我们分别从倒排索引表中取出词项Brutus和Calpurnia的posting list，然后对这两个词项的posting list求交集，即可得到查询需要输出的文档集合。如下图，</p>
-<center>![处理布尔查询时对两个倒排记录表求交集](/images/boolean-retrieval/sample-intersection-of-two-postings-lists.jpg)</center>
-
+<p><img src="/images/boolean-retrieval/sample-intersection-of-two-postings-lists.jpg" alt="处理布尔查询时对两个倒排记录表求交集"></p>
 <center>图3（IR图1-3）：处理布尔查询时对两个倒排记录表求交集</center>
 
 <p>然而，求交集这个操作的时间复杂度应该认真考量！一个显而易见的方法就是在外循环中遍历其中一个posting list，然后在内循环中对另外一个posting list的元素进行匹配查找。然而，这种求交集的方式需要的比较次数为$O(x<em>y)$，其中x、y分别是两个posting list的长度。考虑前面提到过的100万篇文档(document)，每篇文档大约1000个词，这些文档大概会有50万个不同的词项的例子，那么每个posting list的长度大约为2000（$100万×1000÷50万=2000$）。那么就需要做大约400万(2000×2000)次比较才能返回查询结果。在Web搜索引擎中，文档集规模比例子要大得多，查询需要的比较次数就更多了。那么，有没有更优的合并算法呢？<br>回忆我们构建倒排索引的时候，对posting list中的posting根据文档ID排序了，这个时候就可以派上用场了，下面的算法只需要$O(x</em>y)$次操作！</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 合并倒排记录表，p1, p2是根据docID排序的有序list，对p1和p2求交集（合并） */</span></span><br><span class="line">Intersect(p1, p2)</span><br><span class="line">    answer = &lt;&gt;  <span class="comment">// 初始化取交集的结果</span></span><br><span class="line">    <span class="keyword">while</span> p1 ≠ NIL <span class="keyword">and</span> p2 ≠ NIL  <span class="comment">// list不为空</span></span><br><span class="line">        <span class="keyword">if</span> docID(p1) == docID(p2)  <span class="comment">// 两个posting list遇到一样的docID</span></span><br><span class="line">            Add(answer, docID(p1))</span><br><span class="line">            p1 = p1.next</span><br><span class="line">            p2 = p2.next</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> docID(p1) &lt; docID(p2)  <span class="comment">// docID小的posting list的指针前移(p1的小)</span></span><br><span class="line">            p1 = p1.next</span><br><span class="line">        <span class="keyword">else</span>  <span class="comment">// docID小的posting list的指针前移(p2的小)</span></span><br><span class="line">            p2 = p2.next</span><br><span class="line">    <span class="keyword">return</span> answer</span><br></pre></td></tr></table></figure>
 
 <p>上面的伪代码是我根据IR书中的伪代码重写的，因为原书中的涉及if-else判断语句的代码缩进非常奇怪，附上原图：</p>
-<center>![Intersect](/images/boolean-retrieval/algorithm-intersection-of-two-postings-lists.jpg)</center>
-
+<p><img src="/images/boolean-retrieval/algorithm-intersection-of-two-postings-lists.jpg" alt="Intersect"></p>
 <center>图4（IR图1-6）：两个倒排记录表的合并算法</center>
 
 <p>要使用上述的合并posting list的算法，那么所有的posting list必须按照统一的标准进行排序。这里，我们使用的排序方法是根据全局统一的文档ID(docID)来对posting list排序。<br>对上述代码稍作修改就可以写出对p1,p2求并集的代码(最后需要把非空的list添加到answer中)。而对于NOT查询，只需要在结果中去掉相应的postings。</p>
@@ -652,8 +654,7 @@
 <center>Brutus AND Caesar AND Calpurnia</center>
 
 <p>直接的想法是，我们依次取出Brutus，Caesar和Calpurnia的倒排记录表，然后先合并Brutus和Caesar得到一个中间结果tmp_answer（调用Intersect(Brutus.list, Caesar.list)），然后再把tmp_answer与Calpurnia合并得到最终结果（调用Intersect(tmp_answer, Calpurnia.list)）。<br>然而，一个启发式的算法可能取得更好的效果，降低比较次数。根据词项的文档频率（亦即泡排记录表的长度）从小到大依次进行处理。先合并两个最短的倒排记录表，那么所有中间结果的长度都不会超过最短的倒排记录表，最终需要的比较次数也就<strong>很可能最少</strong>。</p>
-<center>![Intersect](/images/boolean-retrieval/process-of-merging-sorted-postings-lists.jpg)</center>
-
+<p><img src="/images/boolean-retrieval/process-of-merging-sorted-postings-lists.jpg" alt="Intersect"></p>
 <center>图5（IR图1-7）：多查询词的查询优化-启发式算法</center>
 
 <p>这种启发式算法大部分情况下能取得很好的效果，但在某些情况下并不是最优的，最后，有兴趣的读者可以思考一下如何合并以下的三个倒排记录表才能最优（可见这种启发式算法并不一定能保证比较次数最少）。</p>
@@ -794,7 +795,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">37</span>
+                    <span class="site-state-item-count">38</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -944,7 +945,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">44</span>
+                      
+                    
+                    <span class="site-state-item-count">45</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
