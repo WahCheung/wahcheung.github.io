@@ -103,18 +103,18 @@
 
 
 
-  <meta name="description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。  Samba安装12$ sudo apt-get update$ sudo apt-get install samba  Samba用户在Linux主机上单独开设一个系统用户(share)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远">
+  <meta name="description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。">
 <meta name="keywords" content="Samba">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Samba文件共享">
 <meta property="og:url" content="https://cheung.site/2019/09/19/samba-service/index.html">
 <meta property="og:site_name" content="工程师学徒">
-<meta property="og:description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。  Samba安装12$ sudo apt-get update$ sudo apt-get install samba  Samba用户在Linux主机上单独开设一个系统用户(share)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远">
+<meta property="og:description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-07T14:10:49.109Z">
+<meta property="og:updated_time" content="2019-12-06T13:26:57.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Samba文件共享">
-<meta name="twitter:description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。  Samba安装12$ sudo apt-get update$ sudo apt-get install samba  Samba用户在Linux主机上单独开设一个系统用户(share)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远">
+<meta name="twitter:description" content="有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。">
 
 
 
@@ -443,6 +443,8 @@
         <blockquote>
 <p>有时候需要在其他主机（Linux/Windows/Mac）上直接修改Linux服务器的数据，这是使用Samba搭建文件共享服务的笔记。</p>
 </blockquote>
+<a id="more"></a>
+
 <h2 id="Samba安装"><a href="#Samba安装" class="headerlink" title="Samba安装"></a>Samba安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install samba</span><br></pre></td></tr></table></figure>
 
 <h2 id="Samba用户"><a href="#Samba用户" class="headerlink" title="Samba用户"></a>Samba用户</h2><p>在Linux主机上单独开设一个系统用户(<code>share</code>)用于Samba（以及vsftpd之类的）共享服务，为安全起见，禁止该用户远程登录机器。</p>
