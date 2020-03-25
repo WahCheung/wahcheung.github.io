@@ -361,6 +361,176 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://cheung.site/2020/02/19/apollo-routing-map/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="龚华昌">
+      <meta itemprop="description" content="<h6>每一个认真的技术人<br/>心底都有一个技术英雄梦</h6>">
+      <meta itemprop="image" content="/images/sanji.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="工程师学徒">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2020/02/19/apollo-routing-map/" class="post-title-link" itemprop="url">Apollo Routing地图</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-02-19 11:56:02" itemprop="dateCreated datePublished" datetime="2020-02-19T11:56:02+08:00">2020-02-19</time>
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Apollo自动驾驶/" itemprop="url" rel="index"><span itemprop="name">Apollo自动驾驶</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Routing地图"><a href="#Routing地图" class="headerlink" title="Routing地图"></a>Routing地图</h1><blockquote>
+<p>Routing地图(<code>routing_map</code>)是Routing导航的基础信息来源，根据高精度语义地图(<code>base_map</code>)中车道的拓扑结构转化而来。Routing地图通过脚本<code>scripts/generate_routing_topo_graph.sh</code>来创建，实际功能由<code>GraphCreator</code>类来完成(将<code>base_map</code>转为<code>routing_map</code>)，主体逻辑代码位于<code>modules/routing/topo_creator</code>目录。</p>
+</blockquote>
+<h2 id="Routing地图的作用"><a href="#Routing地图的作用" class="headerlink" title="Routing地图的作用"></a>Routing地图的作用</h2><p>Routing地图是从高精度语义地图抽象出来的初步的拓扑结构，这个拓扑结构的节点(Node)是可供行驶的Lane，而边(Edge)则表示Lane之间的拓扑关系。这个拓扑关系具体指的是，举个例子，Lane B是Lane A的右邻同向车道(B是A的<code>right_neighbor_forward_lane</code>)，则会有一条Edge从A指向B，这条Edge的DirectionType是RIGHT。Routing地图是Routing模块的基本信息来源，用于进行全局的路径搜索，类似于百度地图/高德地图的导航功能。</p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/02/19/apollo-routing-map/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    <div>
+      
+    </div>
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://cheung.site/2019/09/19/samba-service/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1819,175 +1989,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://cheung.site/2018/08/20/cool-things-to-do-with-a-vps/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="龚华昌">
-      <meta itemprop="description" content="<h6>每一个认真的技术人<br/>心底都有一个技术英雄梦</h6>">
-      <meta itemprop="image" content="/images/sanji.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="工程师学徒">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/08/20/cool-things-to-do-with-a-vps/" class="post-title-link" itemprop="url">我的VPS都用来干嘛了</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-
-              
-                
-              
-
-              <time title="创建时间：2018-08-20 15:32:10" itemprop="dateCreated datePublished" datetime="2018-08-20T15:32:10+08:00">2018-08-20</time>
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/自娱自乐/" itemprop="url" rel="index"><span itemprop="name">自娱自乐</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>目前在VPS上搭建了VPN服务器，Git服务器和FTP服务器，通过自己的VPN服务器实现了不限流量的科学上网。因为有很方便的开源工具，这几个服务的搭建都很简单。</p>
-</blockquote>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/08/20/cool-things-to-do-with-a-vps/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    <div>
-      
-    </div>
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2036,7 +2037,7 @@
                 
                   <a href="/archives">
                 
-                    <span class="site-state-item-count">38</span>
+                    <span class="site-state-item-count">39</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2081,7 +2082,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">14</span>
+                      
+                    
+                    <span class="site-state-item-count">15</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -2188,7 +2191,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">45</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">47</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -2268,7 +2275,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; 2016 – <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-heart"></i>
   </span>
