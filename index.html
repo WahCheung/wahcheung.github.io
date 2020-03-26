@@ -460,10 +460,7 @@
 
       
         
-          <h1 id="Routing地图"><a href="#Routing地图" class="headerlink" title="Routing地图"></a>Routing地图</h1><blockquote>
-<p>Routing地图(<code>routing_map</code>)是Routing导航的基础信息来源，根据高精度语义地图(<code>base_map</code>)中车道的拓扑结构转化而来。Routing地图通过脚本<code>scripts/generate_routing_topo_graph.sh</code>来创建，实际功能由<code>GraphCreator</code>类来完成(将<code>base_map</code>转为<code>routing_map</code>)，主体逻辑代码位于<code>modules/routing/topo_creator</code>目录。</p>
-</blockquote>
-<h2 id="Routing地图的作用"><a href="#Routing地图的作用" class="headerlink" title="Routing地图的作用"></a>Routing地图的作用</h2><p>Routing地图是从高精度语义地图抽象出来的初步的拓扑结构，这个拓扑结构的节点(Node)是可供行驶的Lane，而边(Edge)则表示Lane之间的拓扑关系。这个拓扑关系具体指的是，举个例子，Lane B是Lane A的右邻同向车道(B是A的<code>right_neighbor_forward_lane</code>)，则会有一条Edge从A指向B，这条Edge的DirectionType是RIGHT。Routing地图是Routing模块的基本信息来源，用于进行全局的路径搜索，类似于百度地图/高德地图的导航功能。</p>
+          <h2 id="Routing地图的作用"><a href="#Routing地图的作用" class="headerlink" title="Routing地图的作用"></a>Routing地图的作用</h2><p>Routing地图是从高精度语义地图抽象出来的初步的拓扑结构，这个拓扑结构的节点(Node)是可供行驶的Lane，而边(Edge)则表示Lane之间的拓扑关系。这个拓扑关系具体指的是，举个例子，Lane B是Lane A的右邻同向车道(B是A的<code>right_neighbor_forward_lane</code>)，则会有一条Edge从A指向B，这条Edge的DirectionType是RIGHT。Routing地图是Routing模块的基本信息来源，用于进行全局的路径搜索，类似于百度地图/高德地图的导航功能。</p>
           <!--noindex-->
           
             <div class="post-button text-center">
